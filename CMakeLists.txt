@@ -162,6 +162,7 @@ include("FindThirdPartyVRPN")
 # #############################################################################
 # Find Acquisition Drivers
 include("FindThirdPartyBrainProductsAmplifierAPI")
+include("FindThirdPartyEemagineEEGO")
 
 # #############################################################################
 # Add OpenViBE subdirectories
