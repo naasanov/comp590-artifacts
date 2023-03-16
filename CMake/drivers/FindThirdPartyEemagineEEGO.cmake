@@ -23,9 +23,9 @@
 
 get_property(OV_PRINTED GLOBAL PROPERTY OV_TRIED_ThirdPartyEemagineEEGO)
 
-add_library(eemagine-eego-sdk)
 
 if (WIN32)
+    add_library(eemagine-eego-sdk)
     if (EXISTS ${LIST_DEPENDENCIES_PATH}/sdk_eemagine_eego)
         set(EEMAGINE_EEGO_SDK_DIR ${LIST_DEPENDENCIES_PATH}/sdk_eemagine_eego/eemagine/)
     endif()
@@ -51,6 +51,8 @@ if (WIN32)
     else(EEMAGINE_EEGO_SDK_LIB)
         ov_print(OV_PRINTED "  FAILED to find EEmagine EEGO SDK (optional)")
     endif(EEMAGINE_EEGO_SDK_LIB)
+else()
+    add_library(eemagine-eego-sdk INTERFACE)
 endif()
 
 set_property(GLOBAL PROPERTY OV_TRIED_ThirdPartyEemagineEEGO "Yes")
