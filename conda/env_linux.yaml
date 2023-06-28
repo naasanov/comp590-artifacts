@@ -20,5 +20,11 @@ dependencies:
 - gtk2=2.24
 - python=3.7
 - xorg-libx11=1.8.2
+- mesa-libgl-devel-cos7-x86_64
+- libxext-devel-cos7-x86_64
+- libxxf86vm-cos7-x86_64 
+- libselinux-devel-cos7-x86_64 
+- libxdamage-cos7-x86_64 
+- libxdamage-devel-cos7-x86_64
 
 - doxygen=1.9.2
