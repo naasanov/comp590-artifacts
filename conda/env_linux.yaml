@@ -16,10 +16,10 @@ dependencies:
 - lua=5.1.5 (bump patch 5.1.4)
 - tinyxml2=9.0.0
 - expat=2.5.0 (bump mineur 2.1.0)
-- xerces-x=3.2.4 (bump mineur 3.1.3)
+- xerces-c=3.2.4 (bump mineur 3.1.3)
 - gtk2=2.24
 - python=3.7
-- xorg-libx11=1.8.2
+- xorg-libx11=1.8.6
 - libvorbis
 - libogg
 
