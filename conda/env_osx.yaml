@@ -20,5 +20,7 @@ dependencies:
 - gtk2=2.24
 - python=3.7
 - xorg-libx11=1.8.2
+- libvorbis
+- libogg
 
 - doxygen=1.9.2

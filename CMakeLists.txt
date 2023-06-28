@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 
 cmake_policy(SET CMP0026 OLD)
 cmake_policy(SET CMP0039 NEW)
@@ -7,7 +7,6 @@ cmake_policy(SET CMP0043 OLD)
 cmake_policy(SET CMP0045 OLD)
 cmake_policy(SET CMP0048 NEW)
 cmake_policy(SET CMP0057 NEW)
-
 
 set(OPENVIBE_MAJOR_VERSION 3)
 set(OPENVIBE_MINOR_VERSION 5)
@@ -158,6 +157,11 @@ include("FindThirdPartyGTest")
 include("FindThirdPartyLua")
 include("FindThirdPartyTinyXML2")
 include("FindThirdPartyVRPN")
+find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Quick QuickControls2 Test)
+
+if(QT_KNOWN_POLICY_QTP0001)
+  qt_policy(SET QTP0001 NEW)
+endif()
 
 # #############################################################################
 # Find Acquisition Drivers
