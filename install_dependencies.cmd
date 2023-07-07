@@ -60,64 +60,6 @@ if not EXIST %dependenciesDirArchives% (
     md %dependenciesDirArchives%
 )
 
-set PATH=%PATH%;%dependenciesDir%\cmake\bin
-
-WHERE cmake >NUL
-if not errorlevel 1 (
-    rem get cmake version
-    set firstLine=1
-    for /f "usebackq tokens=3" %%i in (`cmake --version`) do (
-        if !firstLine!==1 set cmakeVersionFound=%%i
-        set firstLine=0
-    )
-
-    rem check version found
-    for /f "tokens=1,2 delims=." %%i in ("!cmakeVersionFound!") do (
-        if  %%i LSS %versionMajor% goto cmakeIsNeeded
-        if  %%i GTR %versionMajor% goto cmakeIsNotNeeded
-        if  %%j LSS %versionMinor% goto cmakeIsNeeded
-        goto cmakeIsNotNeeded
-    )
-
-    :cmakeIsNeeded
-    echo CMake version found [!cmakeVersionFound!] is lower than required [%versionMajor%.%versionMinor%.%versionPatch%]
-    set cmakeNeeded=y
-    goto next
-
-    :cmakeIsNotNeeded
-    echo CMake version found is Ok
-    set cmakeNeeded=n
-    goto next
-) else (
-    echo CMake not found on the machine
-    set cmakeNeeded=y
-)
-
-:next
-if  "%cmakeNeeded%" == "y" (
-    echo Installing CMake version %versionMajor%.%VersionMinor% in %dependenciesDir%
-
-    if /i "%platformTarget%" equ "x64" (
-        set cmakeFolder=cmake-%versionMajor%.%VersionMinor%.%versionPatch%-win64-x64
-    ) else (
-        set cmakeFolder=cmake-%versionMajor%.%VersionMinor%.%versionPatch%-win32-x86
-    )
-
-    cd %dependenciesDirArchives%
-    if not exist !cmakeFolder! (
-        if not exist !cmakeFolder!.zip (
-            rem get archive
-            powershell -NoProfile -Command "Invoke-WebRequest  http://www.cmake.org/files/v%versionMajor%.%versionMinor%/!cmakeFolder!.zip -OutFile !cmakeFolder!".zip
-        )
-        rem extract archive
-        echo Extract cmake archive
-        powershell -NoProfile -Command "Expand-Archive !cmakeFolder!.zip -DestinationPath ."
-    )
-    powershell -NoProfile -Command "Copy-Item -Path !cmakeFolder! -Destination %dependenciesDir%\cmake -Recurse -Force"
-
-    cd %workDir%
-)
-
 rem -- #############################################################################
 rem -- Dependencies install - CMake project
 rem -- New preferred method which is cross-platform
