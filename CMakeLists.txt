@@ -155,7 +155,9 @@ include("FindThirdPartyBoost")
 include("FindThirdPartyEigen")
 include("FindThirdPartyGTest")
 include("FindThirdPartyLua")
-include("FindThirdPartyTinyXML2")
+
+find_package(tinyxml2 REQUIRED)
+
 include("FindThirdPartyVRPN")
 find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Quick QuickControls2 Test)
 

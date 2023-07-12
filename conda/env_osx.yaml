@@ -24,3 +24,4 @@ dependencies:
 - libogg
 - llvm-openmp
 - doxygen=1.9.2
+- tinyxml2
