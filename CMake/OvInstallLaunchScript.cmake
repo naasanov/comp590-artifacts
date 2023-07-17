@@ -26,7 +26,7 @@ function(OV_INSTALL_LAUNCH_SCRIPT)
 		if(WIN32)
 			set(SCRIPT_POSTFIX ".cmd")
 		elseif(APPLE)
-			set(SCRIPT_POSTFIX "-macos.sh")
+			set(SCRIPT_POSTFIX ".sh")
 		elseif(UNIX)
 			# Debian recommends that extensions such as .sh are not used; On Linux, scripts with such extensions shouldn't be packaged
 			set(SCRIPT_POSTFIX ".sh")
