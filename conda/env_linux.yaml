@@ -21,6 +21,7 @@ dependencies:
 - python=3.7
 - libvorbis
 - libogg
+- zlib=1.2.13
 - openvibe::vrpn
 
 - doxygen=1.9.2

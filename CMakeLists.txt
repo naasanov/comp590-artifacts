@@ -154,11 +154,11 @@ set(VALIDATION_FOLDER Validation-Tests)
 include("FindThirdPartyBoost")
 include("FindThirdPartyEigen")
 include("FindThirdPartyGTest")
+include("FindThirdPartyGTK2")
 include("FindThirdPartyLua")
-
-find_package(tinyxml2 REQUIRED)
-
+include("FindThirdPartyTinyXML2")
 include("FindThirdPartyVRPN")
+include("FindThirdPartyZLib")
 find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Quick QuickControls2 Test)
 
 if(QT_KNOWN_POLICY_QTP0001)
