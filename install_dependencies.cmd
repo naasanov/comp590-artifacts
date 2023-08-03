@@ -61,26 +61,6 @@ if not EXIST %dependenciesDirArchives% (
 )
 
 rem -- #############################################################################
-rem -- Dependencies install - CMake project
-rem -- New preferred method which is cross-platform
-rem -- #############################################################################
-
-mkdir %baseDir%\external_projects\build\%buildType% >NUL
-cd %baseDir%\external_projects\build\%buildType%
-
-rem Initialise compiler environment and cmakeGenerator variable
-call %baseDir%\windows-init-env.cmd --platform-target %platformTarget%
-
-if /i "%platformTarget%" equ "x64" (
-	set generatorPlatform=x64
-) else (
-    set generatorPlatform=Win32
-)
-
-cmake ..\.. -G %cmakeGenerator% -DCMAKE_BUILD_TYPE=%buildType% -DEP_DEPENDENCIES_DIR=%dependenciesDir%
-msbuild Dependencies.sln /p:Configuration=%buildType% /p:Platform=!generatorPlatform! /verbosity:minimal
-
-rem -- #############################################################################
 rem -- Install remaining dependencies - original script method
 rem -- Deprecated method
 rem -- #############################################################################

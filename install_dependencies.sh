@@ -117,24 +117,3 @@ cd $work_dir
 perl sdk/scripts/linux-install_dependencies.pl --manifest-dir sdk/scripts/ --dependencies-dir $dependencies_dir
 perl sdk/scripts/linux-install_dependencies.pl --manifest-dir designer/scripts/ --dependencies-dir $dependencies_dir
 perl sdk/scripts/linux-install_dependencies.pl --manifest-dir extras/scripts/ --dependencies-dir $dependencies_dir
-
-# #############################################################################
-# Dependencies install - new CMake project
-# New preferred method which is cross-platform
-# #############################################################################
-
-mkdir -p external_projects/build/$buildType
-cd external_projects/build/$buildType
-
-# generate dependencies project
-cmake ../.. -DCMAKE_BUILD_TYPE=$buildType
-if [ $? -ne 0 ]; then
-  exit 1
-fi
-
-# Build dependencies project
-make
-if [ $? -ne 0 ]; then
-  exit 1
-fi
-
