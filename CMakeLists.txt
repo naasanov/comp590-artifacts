@@ -159,7 +159,9 @@ include("FindThirdPartyLua")
 include("FindThirdPartyTinyXML2")
 include("FindThirdPartyVRPN")
 include("FindThirdPartyZLib")
+include("FindThirdPartyOpenGL")
 find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Quick QuickControls2 Test)
+
 
 if(QT_KNOWN_POLICY_QTP0001)
   qt_policy(SET QTP0001 NEW)

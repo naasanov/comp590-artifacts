@@ -22,7 +22,9 @@ if(EXISTS ${LIST_DEPENDENCIES_PATH}/gtk)
     set(GTK2_GLIBCONFIG_INCLUDE_DIR ${LIST_DEPENDENCIES_PATH}/gtk/lib/glib-2.0/include)
 endif()
 
-find_package(GTK2 REQUIRED gtk)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
+
 if(GTK2_FOUND)
     ov_print(OV_PRINTED "Found GTK2 library")
 

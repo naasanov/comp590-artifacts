@@ -1,6 +1,7 @@
 name: openvibe
 
 channels:
+- openvibe
 - conda-forge
 
 dependencies:
@@ -23,13 +24,35 @@ dependencies:
 - libogg
 - zlib=1.2.13
 - openvibe::vrpn
-
+- fftw
+- mkl
+- itpp
+- pkg-config
 - doxygen=1.9.2
-
+- libglvnd-devel-cos7-x86_64
+- xorg-x11-proto-devel-cos7-x86_64
 - mesa-libgl-devel-cos7-x86_64
+- mesa-libegl-devel-cos7-x86_64
+- mesa-dri-drivers-cos7-x86_64
+- libx11-devel-cos7-x86_64
 - libxext-devel-cos7-x86_64
-- libxxf86vm-cos7-x86_64
+- libxrender-devel-cos7-x86_64
+- libxcb-cos7-x86_64
+- libxau-devel-cos7-x86_64
+- libdrm-devel-cos7-x86_64
+- libxcomposite-devel-cos7-x86_64
+- libxcursor-devel-cos7-x86_64
+- libxi-devel-cos7-x86_64
+- libxrandr-devel-cos7-x86_64
+- pciutils-devel-cos7-x86_64
+- libxscrnsaver-devel-cos7-x86_64
+- libxtst-devel-cos7-x86_64
 - libselinux-devel-cos7-x86_64
 - libxdamage-cos7-x86_64
 - libxdamage-devel-cos7-x86_64
-- xorg-x11-proto-devel-cos7-x86_64
+- libxfixes-cos7-x86_64
+- libxfixes-devel-cos7-x86_64
+- libxxf86vm-cos7-x86_64
+- libice-devel-cos7-x86_64
+- libxt-devel-cos7-x86_64
+- libsm-devel-cos7-x86_64
