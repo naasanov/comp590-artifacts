@@ -23,10 +23,8 @@ dependencies:
 - libvorbis
 - libogg
 - zlib=1.2.13
-- openvibe::vrpn
-- fftw
-- mkl
-- itpp
+- vrpn=07.31
+- itpp=4.3.1
 - pkg-config
 - doxygen=1.9.2
 - libglvnd-devel-cos7-x86_64
