@@ -4,7 +4,7 @@ channels:
 - conda-forge
 
 dependencies:
-- cmake=3.20
+- cmake=3.25
 - clangxx_osx-64=14.0.6
 - ninja=1.10.0
 
