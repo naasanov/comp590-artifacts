@@ -23,12 +23,12 @@ dependencies:
 - openal-soft=1.21.1
 - libogg=1.3.4 #(1.2.1)
 - libvorbis=1.3.7 #(1.3.2)
+# - freealut=1.1.0
 - zlib=1.2.13
 - lua=5.4.6 # (bump mineur 5.1.4)
 - vrpn=7.31
 - itpp=4.3.1
 
->>>>>>> Stashed changes
 #- gtk2=2.24
 
 

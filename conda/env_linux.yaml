@@ -20,8 +20,10 @@ dependencies:
 - xerces-c=3.2.4 (bump mineur 3.1.3)
 - gtk2=2.24
 - python=3.7
-- libvorbis
-- libogg
+- openal-soft=1.21.1
+#- freealut=1.1.0
+- libvorbis=1.3.7
+- libogg=1.3.4
 - zlib=1.2.13
 - vrpn=07.31
 - itpp=4.3.1
