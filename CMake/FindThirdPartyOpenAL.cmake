@@ -53,7 +53,7 @@ if (ALUT_FOUND)
         ov_print(OV_PRINTED "Found ALUT, but failed to find the lib")
     endif()
 else ()
-    ov_print("Failed to find ALUT")
+    ov_print(OV_PRINTED "Failed to find ALUT")
 endif()
 
 
