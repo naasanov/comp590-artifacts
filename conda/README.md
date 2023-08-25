@@ -38,3 +38,8 @@ Make with all your processors
 
 Install OpenVibe
 `$ make install`
+
+## Tests
+
+`$ cd sdk; ./ctest-launcher.sh `
+`$ cd extra; ctest`
