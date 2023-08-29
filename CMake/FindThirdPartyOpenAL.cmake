@@ -37,44 +37,49 @@ endif()
 ##
 # Find ALUT
 #
-pkg_check_modules(ALUT freealut)
+if (NOT ALUT_FOUND)
+    pkg_check_modules(ALUT freealut)
 
-if (ALUT_FOUND)
-    ov_print(OV_PRINTED "Found ALUT")
-    add_library(alut INTERFACE)
+    if (ALUT_FOUND)
+        ov_print(OV_PRINTED "Found ALUT")
+        add_library(alut INTERFACE)
 
-    set(ALUT_LINK_LIB "ALUT_LINK_LIB-NOTFOUND")
-    find_library(ALUT_LINK_LIB NAMES alut PATHS ${ALUT_LIBRARY_DIRS} NO_DEFAULT_PATH)
-    if (ALUT_LINK_LIB)
-        target_include_directories(alut INTERFACE ${ALUT_INCLUDE_DIRS})
-        target_link_libraries(alut INTERFACE ${ALUT_LINK_LIB} OpenAL::OpenAL)
-        target_compile_definitions(alut INTERFACE -DTARGET_HAS_ThirdPartyOpenAL)
-    else()
-        ov_print(OV_PRINTED "Found ALUT, but failed to find the lib")
+        set(ALUT_LINK_LIB "ALUT_LINK_LIB-NOTFOUND")
+        find_library(ALUT_LINK_LIB NAMES alut PATHS ${ALUT_LIBRARY_DIRS} NO_DEFAULT_PATH)
+        if (ALUT_LINK_LIB)
+            target_include_directories(alut INTERFACE ${ALUT_INCLUDE_DIRS})
+            target_link_libraries(alut INTERFACE ${ALUT_LINK_LIB} OpenAL::OpenAL)
+            target_compile_definitions(alut INTERFACE -DTARGET_HAS_ThirdPartyOpenAL)
+        else()
+            ov_print(OV_PRINTED "Found ALUT, but failed to find the lib")
+        endif()
+    else ()
+        ov_print(OV_PRINTED "Failed to find ALUT")
     endif()
-else ()
-    ov_print(OV_PRINTED "Failed to find ALUT")
 endif()
 
 
 ##
 # Find OGG
 #
-pkg_check_modules(OGG ogg)
-if (OGG_FOUND)
-    ov_print(OV_PRINTED "Found OGG")
-    add_library(ogg INTERFACE)
 
-    set(OGG_LINK_LIB "OGG_LINK_LIB-NOTFOUND")
-    find_library(OGG_LINK_LIB NAMES ogg PATHS ${OGG_LIBRARY_DIRS} NO_DEFAULT_PATH)
-    if(OGG_LINK_LIB)
-        target_include_directories(ogg INTERFACE ${OGG_INCLUDE_DIRS})
-        target_link_libraries(ogg INTERFACE ${OGG_LINK_LIB})
+if (NOT OGG_FOUND)
+    pkg_check_modules(OGG ogg)
+    if (OGG_FOUND)
+        ov_print(OV_PRINTED "Found OGG ++++")
+        add_library(ogg INTERFACE)
+
+        set(OGG_LINK_LIB "OGG_LINK_LIB-NOTFOUND")
+        find_library(OGG_LINK_LIB NAMES ogg PATHS ${OGG_LIBRARY_DIRS} NO_DEFAULT_PATH)
+        if(OGG_LINK_LIB)
+            target_include_directories(ogg INTERFACE ${OGG_INCLUDE_DIRS})
+            target_link_libraries(ogg INTERFACE ${OGG_LINK_LIB})
+        else()
+            ov_print(OV_PRINTED "Found OGG, but failed to find the lib")
+        endif()
     else()
-        ov_print(OV_PRINTED "Found OGG, but failed to find the lib")
+        ov_print(OV_PRINTED "Failed to find OGG")
     endif()
-else()
-    ov_print(OV_PRINTED "Failed to find OGG")
 endif()
 
 ##
@@ -82,18 +87,20 @@ endif()
 #
 # Linux conda package for OGG not providing OggConfig.cmake and Vorbis needs it so find_package(Vorbis) cannot be used either.
 
-find_library(VORBIS_LIB NAMES vorbisfile)
-find_path(VORBIS_INCLUDE_DIR NAMES vorbisfile.h PATH_SUFFIXES vorbis)
+if (VORBIS_LIB-NOTFOUND)
+    find_library(VORBIS_LIB NAMES vorbisfile)
+    find_path(VORBIS_INCLUDE_DIR NAMES vorbisfile.h PATH_SUFFIXES vorbis)
 
-if(NOT VORBIS_LIB STREQUAL VORBIS_LIB-NOTFOUND
-	AND NOT VORBIS_INCLUDE_DIR STREQUAL VORBIS_INCLUDE_DIR-NOTFOUND)
+    if(NOT VORBIS_LIB STREQUAL VORBIS_LIB-NOTFOUND
+            AND NOT VORBIS_INCLUDE_DIR STREQUAL VORBIS_INCLUDE_DIR-NOTFOUND)
 
-	ov_print(OV_PRINTED "Found Vorbis library")
+            ov_print(OV_PRINTED "Found Vorbis library")
 
-	# Create target to link against.
-	add_library(vorbis INTERFACE)
-	target_include_directories(vorbis INTERFACE ${VORBIS_INCLUDE_DIR})
-	target_link_libraries(vorbis INTERFACE ${VORBIS_LIB} ogg)
-else()
-	ov_print(OV_PRINTED "  FAILED to find Vorbis")
+	    # Create target to link against.
+	    add_library(vorbis INTERFACE)
+	    target_include_directories(vorbis INTERFACE ${VORBIS_INCLUDE_DIR})
+	    target_link_libraries(vorbis INTERFACE ${VORBIS_LIB} ogg)
+    else()
+	    ov_print(OV_PRINTED "  FAILED to find Vorbis")
+    endif()
 endif()
