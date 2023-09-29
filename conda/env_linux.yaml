@@ -6,6 +6,7 @@ channels:
 
 dependencies:
 - cmake=3.25
+- pkg-config
 - gcc_linux-64=9.4.0
 - ninja=1.10.0
 
@@ -27,7 +28,6 @@ dependencies:
 - zlib=1.2.13
 - vrpn=07.31
 - itpp=4.3.1
-- pkg-config
 - doxygen=1.9.2
 - libglvnd-devel-cos7-x86_64
 - xorg-x11-proto-devel-cos7-x86_64
