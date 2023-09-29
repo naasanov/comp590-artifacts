@@ -18,8 +18,7 @@
 ###############################################################################
 
 if(EXISTS ${LIST_DEPENDENCIES_PATH}/gtk)
-    set(GTK2_GDKCONFIG_INCLUDE_DIR ${LIST_DEPENDENCIES_PATH}/gtk/lib/gtk-2.0/include)
-    set(GTK2_GLIBCONFIG_INCLUDE_DIR ${LIST_DEPENDENCIES_PATH}/gtk/lib/glib-2.0/include)
+    set(ENV{PKG_CONFIG_PATH} "${LIST_DEPENDENCIES_PATH}/gtk/lib/pkgconfig")
 endif()
 
 find_package(PkgConfig REQUIRED)
