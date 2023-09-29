@@ -29,5 +29,7 @@ if(GTK2_FOUND)
 
     add_library(gtk2 INTERFACE)
     target_include_directories(gtk2 INTERFACE ${GTK2_INCLUDE_DIRS})
+    target_link_directories(gtk2 INTERFACE ${GTK2_LIBRARY_DIRS})
     target_link_libraries(gtk2 INTERFACE ${GTK2_LIBRARIES})
+    target_link_options(gtk2 INTERFACE ${GTK2_LDFLAGS})
 endif()
