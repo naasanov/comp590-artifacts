@@ -107,7 +107,7 @@ string(REPLACE ";" ":" OV_PATH_PATH_DEPENDENCY_LIBS "${OV_PATH_DEPENDENCY_LIBS}"
 
 set(OV_CONFIG_SUBDIR "${PROJECT_NAME}-${PROJECT_VERSION}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
 
-set(OVT_TEST_DATA_DIR "${LIST_DEPENDENCIES_PATH}/test-input")
+set(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/test-data")
 
 
 # Options
