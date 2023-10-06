@@ -160,6 +160,7 @@ set(VALIDATION_FOLDER Validation-Tests)
 # Find external projects
 include("FindThirdPartyBoost")
 include("FindThirdPartyEigen")
+include("FindThirdPartyExpat")
 include("FindThirdPartyGTest")
 include("FindThirdPartyGTK2")
 include("FindThirdPartyITPP")
