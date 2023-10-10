@@ -18,11 +18,17 @@
 ###############################################################################
 
 
-find_library(VRPN_LIBRARY NAMES vrpn vrpnd)
+if (NOT APPLE)
+  find_library(VRPN_LIBRARY NAMES vrpn vrpnd)
+else() # We rely on server version on APPLE
+  find_library(VRPN_SERVER_LIBRARY NAMES vrpnserver)
+endif()
+
 find_library(QUAT_LIBRARY NAMES quat quatd)
 find_path(VRPN_INCLUDE_DIR NAMES vrpn_Connection.h PATH_SUFFIXES vrpn)
 
-if(NOT VRPN_LIBRARY STREQUAL VRPN_LIBRARY-NOTFOUND
+if(NOT APPLE AND
+   NOT VRPN_LIBRARY STREQUAL VRPN_LIBRARY-NOTFOUND
 	AND NOT QUAT_LIBRARY STREQUAL QUAT_LIBRARY-NOTFOUND
 	AND NOT VRPN_INCLUDE_DIR STREQUAL VRPN_INCLUDE_DIR-NOTFOUND)
 
@@ -32,6 +38,19 @@ if(NOT VRPN_LIBRARY STREQUAL VRPN_LIBRARY-NOTFOUND
 	add_library(vrpn INTERFACE)
 	target_include_directories(vrpn INTERFACE ${VRPN_INCLUDE_DIR})
 	target_link_libraries(vrpn INTERFACE ${VRPN_LIBRARY} ${QUAT_LIBRARY})
+
+elseif ( NOT QUAT_LIBRARY STREQUAL QUAT_LIBRARY-NOTFOUND
+	AND NOT VRPN_INCLUDE_DIR STREQUAL VRPN_INCLUDE_DIR-NOTFOUND
+	AND NOT VRPN_SERVER_LIBRARY STREQUAL VRPN_SERVER_LIBRARY-NOTFOUND
+)
+
+	# Create target to link against.
+	add_library(vrpn INTERFACE)
+	target_include_directories(vrpn INTERFACE ${VRPN_INCLUDE_DIR})
+	target_link_libraries(vrpn INTERFACE
+	${VRPN_SERVER_LIBRARY}
+	${QUAT_LIBRARY})
+
 
 else()
 	# Add empty target to avoid errors in CMakeLists linking against it
