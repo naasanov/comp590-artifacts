@@ -22,7 +22,17 @@ find_package(PkgConfig REQUIRED)
 ##
 # Find OpenAL
 #
-find_package(OpenAL REQUIRED)
+
+
+# Fix issues with APPLE Framework. Need to get conda OpenAL and not Framework version
+
+if (APPLE AND (DEFINED ENV{CONDA_PREFIX}))
+  # save previous value
+  set(FRAMEWORK_POSITION ${CMAKE_FIND_FRAMEWORK})
+  set(CMAKE_FIND_FRAMEWORK NEVER)
+endif()
+
+find_package(OpenAL)
 
 if (OpenAL_FOUND)
     ov_print(OV_PRINTED "Found OpenAL")
@@ -31,13 +41,16 @@ else()
     ov_print(OV_PRINTED "Failed to find OpenAL, Vorbis or OGG")
 endif()
 
-
+if (APPLE AND (DEFINED ENV{CONDA_PREFIX}))
+  set(CMAKE_FIND_FRAMEWORK ${FRAMEWORK_POSITION})
+endif()
 
 
 ##
 # Find ALUT
 #
 pkg_check_modules(ALUT freealut)
+    ov_print(OV_PRINTED "Checking for ALUT")
 
 if (ALUT_FOUND)
     ov_print(OV_PRINTED "Found ALUT")
@@ -52,8 +65,36 @@ if (ALUT_FOUND)
     else()
         ov_print(OV_PRINTED "Found ALUT, but failed to find the lib")
     endif()
-else ()
-    ov_print(OV_PRINTED "Failed to find ALUT")
+
+else () # Try in usual path (for mac native user, linux ?)
+     find_path(PATH_ALUT AL/alut.h PATHS "/usr/local/opt /usr/local/lib")
+     if (PATH_ALUT)
+       SET(ALUT_INCLUDE_DIRS ${PATH_ALUT} )
+       SET(ALUT_LIBRARY_DIRS ${PATH_ALUT}/lib )
+     else()
+       ov_print(OV_PRINTED "Failed to find ALUT includes")
+     endif()
+
+     find_library (ALUT_Lib NAMES alut HINTS "/usr/local/opt /usr/local/lib")
+     if (NOT ALUT_Lib)
+          ov_print(OV_PRINTED "Failed to find ALUT")
+     else()
+
+       set(ALUT_LIB_NAMES "alut")
+
+       add_library(alut INTERFACE IMPORTED)
+
+       target_include_directories(alut INTERFACE ${ALUT_INCLUDE_DIRS} )
+       target_link_libraries(alut INTERFACE
+         ${ALUT_Lib}
+       )
+
+       mark_as_advanced(
+         ALUT_INCLUDE_DIR
+         ALUT_LIBRARY
+       )
+       SET(ALUT_FOUND True)
+     endif()
 endif()
 
 
