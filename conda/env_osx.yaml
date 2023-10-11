@@ -9,7 +9,7 @@ dependencies:
 - pkg-config
 - clangxx_osx-64=14.0.6
 - ninja=1.10.0
-
+- numpy
 - qt6-main=6.4.3
 - boost-cpp=1.82  (bump mineur 1.71)
 - eigen=3.3.8 (bump patch 3.3.7)
@@ -34,4 +34,3 @@ dependencies:
 
 - xorg-libx11=1.8.6
 - llvm-openmp
-
