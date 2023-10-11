@@ -158,6 +158,7 @@ set(VALIDATION_FOLDER Validation-Tests)
 
 # #############################################################################
 # Find external projects
+include("FindThirdPartyPython")
 include("FindThirdPartyBoost")
 include("FindThirdPartyEigen")
 include("FindThirdPartyExpat")
