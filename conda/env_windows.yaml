@@ -11,7 +11,7 @@ dependencies:
 - ninja=1.10.0
 - numpy
 #- qt6-main=6.4.3
-- boost-cpp=1.72 #(bump mineur 1.71)
+- boost-cpp=1.77 #(bump mineur 1.71)
 - eigen=3.3.8 #(bump patch 3.3.7)
 - gtest=1.10.0 #(bump mineur 1.8.0)
 - gmock=1.10.0
