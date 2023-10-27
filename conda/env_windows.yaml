@@ -29,7 +29,7 @@ dependencies:
 - lua=5.4.6 # (bump mineur 5.1.4)
 - vrpn=7.31
 - itpp=4.3.1
-
+- libiconv=1.16
 #- gtk2=2.24
 
 
