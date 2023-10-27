@@ -29,8 +29,26 @@ if(GTK2_FOUND)
 
     add_library(gtk2 INTERFACE)
     target_include_directories(gtk2 INTERFACE ${GTK2_INCLUDE_DIRS})
-    target_link_directories(gtk2 INTERFACE ${GTK2_LIBRARY_DIRS})
-    target_link_libraries(gtk2 INTERFACE ${GTK2_LIBRARIES})
     target_link_options(gtk2 INTERFACE ${GTK2_LDFLAGS})
     add_definitions(-DTARGET_HAS_ThirdPartyGTK)
+
+    foreach(gtk_library ${GTK2_LIBRARIES})
+        set(gtk_lib "GTK_LIB-NOTFOUND")
+        find_library(gtk_lib NAMES ${gtk_library} PATHS ${GTK2_LIBRARY_DIRS} NO_DEFAULT_PATH)
+        if (gtk_lib)
+            target_link_libraries(gtk2 INTERFACE ${gtk_lib})
+        endif()
+    endforeach()
+    
+
+    if (WIN32)
+        if (EXISTS ${LIST_DEPENDENCIES_PATH}/gtk)
+            install(DIRECTORY ${GTK2_LIBRARY_DIRS}/gtk-2.0/i686-pc-vs10/engines/ 
+                    DESTINATION ${DIST_LIBDIR}/gtk-2.0/i686-pc-vs10/engines/
+                    FILES_MATCHING PATTERN "*.dll")
+            INSTALL(DIRECTORY ${GTK2_LIBRARY_DIRS}/../bin/
+                DESTINATION ${DIST_BINDIR}
+                FILES_MATCHING PATTERN "*.dll")
+        endif()
+    endif()
 endif()
