@@ -154,6 +154,7 @@ include("FindThirdPartyExpat")
 include("FindThirdPartyGTest")
 include("FindThirdPartyGTK2")
 include("FindThirdPartyITPP")
+include("FindThirdPartyLSL")
 include("FindThirdPartyLua")
 include("FindThirdPartyOpenAL")
 include("FindThirdPartyTinyXML2")
@@ -164,10 +165,15 @@ include("FindThirdPartyOpenGL")
 
 # #############################################################################
 # install conda env libraries for execution
+# excluding a few that are not needed at runtime and collide with GTK dlls
 if (WIN32)
 	install(DIRECTORY $ENV{CONDA_PREFIX}/Library/bin/ 
 			DESTINATION ${DIST_BINDIR} 
-			FILES_MATCHING PATTERN "*.dll")
+			FILES_MATCHING PATTERN "*.dll"
+      PATTERN "intl.dll" EXCLUDE
+      PATTERN "intl-8.dll" EXCLUDE
+      PATTERN "iconv.dll" EXCLUDE
+  )
 endif()
 
 
