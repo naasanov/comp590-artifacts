@@ -126,7 +126,6 @@ message(STATUS "  BUILD_DOCUMENTATION = '${BUILD_DOCUMENTATION}'")
 #Could (SHOULD) be replaced with find_path / find_package functionnalities
 set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/expat/bin")
 set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/vcredist")
-set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/xerces-c/lib")
 set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/gtk/bin")
 
 # By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
@@ -160,6 +159,7 @@ include("FindThirdPartyTinyXML2")
 include("FindThirdPartyVRPN")
 include("FindThirdPartyZLib")
 include("FindThirdPartyOpenGL")
+include("FindThirdPartyXercesC")
 #find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Quick QuickControls2 Test)
 
 # #############################################################################
