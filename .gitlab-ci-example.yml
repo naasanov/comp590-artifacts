@@ -1,0 +1,212 @@
+# cf. /etc/alpine-release
+# Alpine 3.6 needed to have the cppcheck package
+image: alpine:3.17.1 
+
+before_script:
+- echo "add @testing http://dl-cdn.alpinelinux.org/alpine/edge/testing to /etc/apk/repositories"
+- echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+- cat /etc/apk/repositories
+- apk -q update && apk -q upgrade
+- apk -q add gcc g++ make cmake bash tree
+
+# By default it runs a pipeline with three stages: build, test, and deploy. You don't need to
+# use all three stages; stages with no jobs are simply ignored.
+
+#########################################################################################################
+#                                                                                                       #
+#                        Compilation                                                                    #
+#                                                                                                       #
+#########################################################################################################
+
+job_compilation:
+  stage: build
+  tags:
+  - ci.inria.fr
+  - small
+  script:
+  # generate build files (makefiles)
+  - cmake -S . -B build
+  # compile
+  - cmake --build build
+  artifacts:
+    paths:
+    - build/
+
+
+#########################################################################################################
+#                                                                                                       #
+#                        Static analysis                                                                #
+#                                                                                                       #
+#########################################################################################################
+#
+# Results will be deployed with the GitLab Pages engine
+# see https://sed-rennes.gitlabpages.inria.fr/formation-gitlab-ci/reports/cppcheck/
+# (cppcheck-htmlreport creates an index.html file at this level)
+#
+job_static_analysis:
+  stage: test
+  tags:
+  - ci.inria.fr
+  - small
+  script:
+  - apk -q add cppcheck cppcheck-htmlreport python3
+  - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON . -B build
+  - cppcheck --project=build/compile_commands.json --xml-version=2 2> build/cppcheckReport.xml
+  - mkdir -p public/reports/cppcheck
+  - cppcheck-htmlreport --file=build/cppcheckReport.xml --report-dir=public/reports/cppcheck --source-dir=.
+  artifacts:
+    paths:
+      - public/
+    expire_in: 1 week
+
+
+#########################################################################################################
+#                                                                                                       #
+#                                     Unit tests                                                        #
+#                                                                                                       #
+#########################################################################################################
+#
+# Results will be deployed with the GitLab Pages engine
+# see https://sed-rennes.gitlabpages.inria.fr/formation-gitlab-ci/reports/cppunit/cppTestBasicMathResults.xml
+
+job_unit_tests:
+  stage: test
+  tags:
+  - ci.inria.fr
+  - small
+  script:
+  - mkdir -p public/reports/
+  - echo "Running Unit tests"
+  - cd build
+  # use junit format
+  - ctest --output-junit reports/junitTestReport.xml
+  - cp reports/junitTestReport.xml ../public/reports/junitTestReport.xml
+  artifacts:
+    paths:
+    - build/reports/junitTestReport.xml
+    - public/
+    when: always
+    reports:
+      junit: build/reports/junitTestReport.xml
+
+
+
+#########################################################################################################
+#                                                                                                       #
+#                            Evaluating code coverage (with gcov)                                       #
+#                                                                                                       #
+#########################################################################################################
+#
+# Ref. https://rachelbythebay.com/w/2011/06/01/coverage/
+#
+# Results will be deployed with the GitLab Pages engine
+# see https://sed-rennes.gitlabpages.inria.fr/formation-gitlab-ci/reports/lcov
+
+job_coverage:
+  stage: test
+  tags:
+  - ci.inria.fr
+  - small
+  script:
+  - apk -q add lcov@testing perl-gd gcovr
+  - echo "Evaluating code coverage"
+  - rm -r build
+  - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCODE_COVERAGE=ON . -B build
+  - cd build
+  - make 
+  - lcov --version
+  - lcov --capture --initial --directory . --output-file .coverage.base
+  - ls -atlrsh
+  - ctest --output-junit reports/junitTestReport.xml
+  - ls -atlrsh
+  - lcov --capture --directory . --output-file .coverage.run
+  - lcov --directory . --add-tracefile .coverage.base --add-tracefile .coverage.run --output-file .coverage.total
+  - ls -atlrsh
+  - genhtml --no-branch-coverage --output-directory lcov/ .coverage.total --highlight --frames --legend --title "Coverage test"
+  - rm -f .coverage.base .coverage.run .coverage.total
+  - tree lcov
+  # FIXME: Tthe original line was the following
+  # - cat lcov/builds/chdeltel/tpmaster/src/index.html | grep headerCovTableEntryHi | head -1 || echo OK
+  - cat lcov/builds/*/src/index.html | grep headerCovTableEntryHi | head -1 || echo OK
+              # the 1rst line gives the Lines coverage (the 2 line would give the Functions coverage)
+              # warning : sometimes, without apparent reason, this job fails with
+              #           Job failed: exit code 141
+              # maybe due to head? https://stackoverflow.com/questions/19120263/why-exit-code-141-with-grep-q
+  - mkdir -p ../public/reports
+  - mv lcov/ ../public/reports/
+  - echo "Generate cobertura report"
+  - gcovr --version
+  - gcovr --xml-pretty --exclude-unreachable-branches --print-summary -o coverage.xml --root ${CI_PROJECT_DIR}
+  - echo "Done"
+  coverage: /^\s*lines:\s*\d+.\d+\%/
+  artifacts:
+    paths:
+    - build/reports/junitTestReport.xml
+    - build/coverage.xml
+    - public/
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: build/coverage.xml
+
+
+
+#########################################################################################################
+#                                                                                                       #
+#                             Looking for memory leaks (with valgrind)                                  #
+#                                                                                                       #
+#########################################################################################################
+# Ref. http://valgrind.org/docs/manual/quick-start.html
+#
+# Results will be deployed with the GitLab Pages engine
+# see https://sed-rennes.gitlabpages.inria.fr/formation-gitlab-ci/reports/valgrind/valgrind.txt
+
+job_valgrind:
+  stage: test
+  tags:
+  - ci.inria.fr
+  - small
+  script:
+  - apk -q add valgrind
+  - echo "Looking for memory leaks (with valgrind)"
+  - cd build
+  - make 
+  - tree
+  - valgrind --version
+  - valgrind --leak-check=yes --leak-check=full --show-leak-kinds=all ./bin/app_tests 2>&1 | tee valgrind.txt
+                                    # redirects both stdout and stderr to filename
+  - mkdir -p ../public/reports/valgrind
+  - cp valgrind.txt ../public/reports/valgrind
+  artifacts:
+    paths:
+    - build/valgrind.txt
+    - public/
+    when: always
+
+
+
+#########################################################################################################
+#                                                                                                       #
+#                                       Deploy GitLab Pages                                             #
+#                                                                                                       #
+#########################################################################################################
+
+pages:
+  stage: deploy
+  tags:
+  - ci.inria.fr
+  - small
+  script:
+  # copy content from "website" folder to the public folder
+  - ls -lsa website
+  - cp -r website/* public
+  # generate some index.html to simplify navigation
+  - cd public
+  - ls -lsa
+  - chmod a+x make_index.sh 
+  - bash make_index.sh
+  - echo "Updated website on $(date)"
+  artifacts:
+    paths:
+    - public

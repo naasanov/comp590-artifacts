@@ -1,232 +1,58 @@
+stages:
+  - build 
+  - test-designer
+  - test-extras
+  - test-sdk
+
 variables:
   LANG: "en_US.UTF-8"
 
-build_mr_macos:
+before_script:
+# First time (not necessary until we go with conda)
+#   - brew update 
+#   - brew upgrade
+# Chnange shell zsh -> bash
+#. - chsh -s /bin/bash
+#   - brew install miniconda
+   - git switch 63-add-package-management
+   - git submodule foreach git switch 63-add-package-management
+
+   - conda env update --file conda/env_osx.yaml  --prune 
+   - source activate openvibe
+   - mkdir -p ../build-CI && cd ../build-CI
+   - export OV_PATH_ROOT=`pwd`
+build:
   stage: build
-  tags:
-    - macos
-  only:
-   - merge_requests
   script:
-    - git submodule update --init --recursive
-    - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git switch 63-add-package-management"
-    - git submodule foreach "git branch -D $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true" #delete branch if exists locally
-    - git submodule foreach "git switch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || git switch 63-add-package-management" # todo put back development
-    - git submodule foreach "git pull"
-    - mamba env update --file conda/env_osx.yaml
-    - conda activate openvibe
-    - rm -rf build
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make -j3
+   - cd ../build-CI && rm -rf *
+   - cmake ../meta; make install -j4; make install
+ 
+  tags:
+    - catalina
 
-build_mr_linux:
-  stage: build
-  tags:
-    - linux
-  only:
-   - merge_requests
+test-designer:
+  stage: test-designer
   script:
-    - git submodule update --init --recursive
-    - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git switch 63-add-package-management"
-    - git submodule foreach "git branch -D $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true" #delete branch if exists locally
-    - git submodule foreach "git switch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || git switch 63-add-package-management" # todo put back development
-    - git submodule foreach "git pull"
-    - mamba env update --file conda/env_linux.yaml 
-    - conda activate openvibe
-    - rm -rf build
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make -j3
+      - echo "==== Testing Designer ===="
+      - cd ../build-CI/designer;
+      - echo "Designer tests to be continue"
+  tags:
+    - catalina
 
-build_mr_windows:
-  stage: build
-  tags:
-    - windows
-  only:
-   - merge_requests
+test-extras:
+  stage: test-extras
   script:
-    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
-    - $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationpath
-    - Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
-    - Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -DevCmdArguments '-arch=x64'
-    - git submodule foreach "git switch 63-add-package-management"
-    - git submodule foreach "git branch -D $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true" #delete branch if exists locally
-    - git submodule foreach "git switch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || git switch 63-add-package-management" # todo put back development
-    - git submodule foreach "git pull"
-    - mamba env update --file conda/env_windows.yaml 
-    - conda activate openvibe
-    - (Remove-Item  "build" -ErrorAction Ignore -Recurse)
-    - (Copy-Item -Path "C:\Users\ci\Desktop\dependencies_x64" -Destination "." -Recurse)
-    - mkdir build
-    - cd build
-    - cmake .. -G Ninja
-    - ninja
-
-
-test-extras_macos:
-  stage: test
-  needs: [build_mr_macos]
+      - cd ../build-CI/extras;
+      - echo "==== Testing Extras ===="
+      - ctest -T test
   tags:
-    - macos
-  only:
-   - merge_requests
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-   - conda activate openvibe
-   - cd build/extras;
-   - echo "==== Testing Extras ===="
-   - ctest -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
-  artifacts:
-    when: always
-    reports:
-      junit: build/extras/test-extras.xml
-
-test-extras_linux:
-  stage: test
-  needs: [build_mr_linux]
-  tags:
-    - linux
-  only:
-   - merge_requests
-  variables:
-    GIT_CHECKOUT: "false"
-    DISPLAY: ":0"
-  script:
-    - conda activate openvibe
-    - cd build/extras;
-    - echo "==== Testing Extras ===="
-    - ctest -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
-  artifacts:
-    when: always
-    reports:
-      junit: build/extras/test-extras.xml
-
-test-extras_windows:
-  stage: test
-  needs: [build_mr_windows]
-  tags:
-    - windows
-  only:
-   - merge_requests
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
-    - conda activate openvibe
-    - cd build/extras;
-    - echo "==== Testing Extras ===="
-    - ctest -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
-  artifacts:
-    when: always
-    reports:
-      junit: build/extras/test-extras.xml
-      
-test-sdk_macos:
-  stage: test
-  needs: [build_mr_macos]
-  tags:
-    - macos
-  only:
-   - merge_requests
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-    - conda activate openvibe
-    - echo "==== Testing SDK ===="
-    - cd build/sdk/unit-test;
-    - ctest -T test -E uoTimeTest --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml
-    - cd ../validation-test;
-    - ctest -T test --rerun-failed --output-on-failure --output-junit test-sdk_validation.xml
-  artifacts:
-    when: always
-    reports:
-      junit: build/sdk/**/test-sdk_*.xml
+    - catalina
         
-test-sdk_linux:
-  stage: test
-  needs: [build_mr_linux]
-  tags:
-    - linux
-  only:
-   - merge_requests
-  variables:
-    GIT_CHECKOUT: "false"
+test-sdk:
+  stage: test-sdk
   script:
-    - conda activate openvibe
-    - echo "==== Testing SDK ===="
-    - cd build/sdk/unit-test;
-    - ctest -T test -E uoTimeTest --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml
-    - cd ../validation-test;
-    - ctest -T test --rerun-failed --output-on-failure --output-junit test-sdk_validation.xml
-  artifacts:
-    when: always
-    reports:
-      junit: build/sdk/**/test-sdk_*.xml
-        
-test-sdk_windows:
-  stage: test
-  needs: [build_mr_windows]
+      - cd ../build-CI/sdk;
+      - echo "==== Testing SDK ===="
+      - ./ctest-launcher.sh
   tags:
-    - windows
-  only:
-   - merge_requests
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
-    - conda activate openvibe
-    - echo "==== Testing SDK ===="
-    - cd build/sdk/unit-test;
-    - ctest -T test -E uoTimeTest -C Release --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml
-    - cd ../validation-test;
-    - ctest -T test -C Release --rerun-failed --output-on-failure --output-junit test-sdk_validation.xml
-  artifacts:
-    when: always
-    reports:
-      junit: build/sdk/**/test-sdk_*.xml
-
-conda-build-linux:
-  stage: deploy
-  needs: [build_mr_linux]
-  tags:
-    - linux
-  only:
-    - master
-    - merge_requests #only for test !!
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-    - mamba mambabuild conda/recipe -c openvibe -c conda-forge
-
-conda-build-macos:
-  stage: deploy
-  needs: [build_mr_macos]
-  tags:
-    - macos
-  only:
-    - master
-    - merge_requests #only for test !!
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-    - mamba mambabuild conda/recipe -c openvibe -c conda-forge
-
-conda-build-windows:
-  stage: deploy
-  needs: [build_mr_windows]
-  tags:
-    - windows
-  only:
-    - master
-    - merge_requests #only for test !!
-  variables:
-    GIT_CHECKOUT: "false"
-  script:
-    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
-    - mamba mambabuild conda/recipe -c openvibe -c conda-forge
+    - catalina
