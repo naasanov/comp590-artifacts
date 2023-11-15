@@ -18,7 +18,11 @@
 ###############################################################################
 
 
-find_library(VRPN_LIBRARY NAMES vrpn vrpnd)
+if (NOT APPLE)
+  find_library(VRPN_LIBRARY NAMES vrpn vrpnd)
+else() # We rely on server version on APPLE
+  find_library(VRPN_SERVER_LIBRARY NAMES vrpnserver)
+endif()
 
 find_library(QUAT_LIBRARY NAMES quat quatd)
 find_path(VRPN_INCLUDE_DIR NAMES vrpn_Connection.h PATH_SUFFIXES vrpn)
