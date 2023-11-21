@@ -8,6 +8,8 @@ dependencies:
 - cmake=3.25
 - pkg-config
 - gcc_linux-64=9.4.0
+- gxx_linux-64=9.4.0
+- make
 - ninja=1.10.0
 - numpy
 - qt6-main=6.4.3
