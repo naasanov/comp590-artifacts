@@ -32,6 +32,11 @@ dependencies:
 - itpp=4.3.1
 - libiconv=1.16
 #- gtk2=2.24
+- sdk-brain-products
+- sdk-gtec-unicorn
+- sdk-eemagine-eego
+- sdk-micromed
+- sdk-tmsi
 
 
 - doxygen=1.9.2

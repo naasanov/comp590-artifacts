@@ -162,7 +162,14 @@ include("FindThirdPartyVRPN")
 include("FindThirdPartyZLib")
 include("FindThirdPartyOpenGL")
 include("FindThirdPartyXercesC")
-#find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Quick QuickControls2 Test)
+
+# #############################################################################
+# Find Acquisition Drivers
+include("FindThirdPartyBrainProductsAmplifierAPI")
+include("FindThirdPartyEemagineEEGO")
+include("FindThirdPartyGTecUnicorn")
+include("FindThirdPartyMicromed")
+include("FindThirdPartyTMSI")
 
 # #############################################################################
 # install conda env libraries for execution
@@ -171,6 +178,7 @@ if (WIN32)
 	install(DIRECTORY $ENV{CONDA_PREFIX}/Library/bin/ 
 			DESTINATION ${DIST_BINDIR} 
 			FILES_MATCHING PATTERN "*.dll"
+      PATTERN ".bit"
       PATTERN "intl.dll" EXCLUDE
       PATTERN "intl-8.dll" EXCLUDE
       PATTERN "iconv.dll" EXCLUDE
@@ -181,11 +189,6 @@ endif()
 if(QT_KNOWN_POLICY_QTP0001)
   qt_policy(SET QTP0001 NEW)
 endif()
-
-# #############################################################################
-# Find Acquisition Drivers
-include("FindThirdPartyBrainProductsAmplifierAPI")
-include("FindThirdPartyEemagineEEGO")
 
 # #############################################################################
 # Add OpenViBE subdirectories
