@@ -31,7 +31,7 @@ dependencies:
 - fftw=3.3.10
 - itpp=4.3.1
 - libiconv=1.16
-#- gtk2=2.24
+- openvibe::gtk-2
 - sdk-brain-products
 - sdk-gtec-unicorn
 - sdk-eemagine-eego
