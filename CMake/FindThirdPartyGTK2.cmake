@@ -17,10 +17,6 @@
 # If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-if(EXISTS ${LIST_DEPENDENCIES_PATH}/gtk)
-    set(ENV{PKG_CONFIG_PATH} "${LIST_DEPENDENCIES_PATH}/gtk/lib/pkgconfig")
-endif()
-
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 
