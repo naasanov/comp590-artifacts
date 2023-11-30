@@ -61,7 +61,8 @@ requirements:
     - tinyxml2=9.0.0
     - expat=2.5.0
     - xerces-c=3.2.4
-    - gtk2=2.24
+    - gtk2=2.24                # [unix]
+    - gtk-2=2.24               # [win]
     - python
     - openal-soft=1.21.1
     - freealut=1.1.0
