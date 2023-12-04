@@ -28,6 +28,11 @@ if(GTK2_FOUND)
     target_link_options(gtk2 INTERFACE ${GTK2_LDFLAGS})
     add_definitions(-DTARGET_HAS_ThirdPartyGTK)
 
+    # Remove deprecated warnings
+    target_compile_definitions(gtk2 INTERFACE G_DISABLE_DEPRECATED)
+    target_compile_definitions(gtk2 INTERFACE GDK_PIXBUF_DISABLE_DEPRECATED)
+    target_compile_definitions(gtk2 INTERFACE -Wno-deprecated-declarations)
+
     foreach(gtk_library ${GTK2_LIBRARIES})
         set(gtk_lib "GTK_LIB-NOTFOUND")
         find_library(gtk_lib NAMES ${gtk_library} PATHS ${GTK2_LIBRARY_DIRS} NO_DEFAULT_PATH)
