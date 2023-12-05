@@ -46,7 +46,7 @@ if(GTK2_FOUND)
         file(COPY ${GTK2_LIBRARY_DIRS}/gtk-2.0/i686-pc-vs10/engines/
              DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/gtk-2.0/i686-pc-vs10/engines/
              FILES_MATCHING PATTERN "*.dll")
-        file(COPY ${GTK2_LIBRARY_DIRS}/../bin/
+        file(COPY ${GTK2_LIBRARY_DIRS}/../../bin/gtk-2.0/
              DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
              FILES_MATCHING PATTERN "*.dll")
 
