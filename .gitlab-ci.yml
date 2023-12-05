@@ -197,7 +197,6 @@ conda-build-linux:
     - linux
   only:
     - master
-    - merge_requests #only for test !!
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -210,7 +209,6 @@ conda-build-macos:
     - macos
   only:
     - master
-    - merge_requests #only for test !!
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -223,7 +221,6 @@ conda-build-windows:
     - windows
   only:
     - master
-    - merge_requests #only for test !!
   variables:
     GIT_CHECKOUT: "false"
   script:
