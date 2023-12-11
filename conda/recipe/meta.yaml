@@ -45,7 +45,6 @@ requirements:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     - libxkbfile                         # [linux]
-    - glib
     - xorg-libx11=1.8.6                  # [osx]
     - llvm-openmp                        # [osx]
     - doxygen=1.9.2
@@ -73,6 +72,7 @@ requirements:
     - fftw=3.3.10
     - itpp=4.3.1
     - liblsl=1.16
+    - glib=2.76.4
     - libiconv=1.16      #[win]
     - sdk-brain-products #[win]
     - sdk-gtec-unicorn   #[win]
