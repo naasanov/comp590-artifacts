@@ -6,7 +6,8 @@ build_mr_macos:
   tags:
     - macos
   only:
-   - merge_requests
+    - merge_requests
+    - web
   script:
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout 63-add-package-management"
@@ -26,7 +27,8 @@ build_mr_linux:
   tags:
     - linux
   only:
-   - merge_requests
+    - merge_requests
+    - web
   script:
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout 63-add-package-management"
@@ -46,7 +48,8 @@ build_mr_windows:
   tags:
     - windows
   only:
-   - merge_requests
+    - merge_requests
+    - web
   script:
     - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
     - $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationpath
@@ -73,7 +76,8 @@ test-extras_macos:
   tags:
     - macos
   only:
-   - merge_requests
+    - merge_requests
+    - web
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -92,7 +96,8 @@ test-extras_linux:
   tags:
     - linux
   only:
-   - merge_requests
+    - merge_requests
+    - web
   variables:
     GIT_CHECKOUT: "false"
     DISPLAY: ":0"
@@ -112,12 +117,14 @@ test-extras_windows:
   tags:
     - windows
   only:
-   - merge_requests
+    - merge_requests
+    - web
   variables:
     GIT_CHECKOUT: "false"
   script:
     - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
     - conda activate openvibe
+    - $env:PYTHONHOME=$env:CONDA_PREFIX
     - cd build/extras;
     - echo "==== Testing Extras ===="
     - ctest -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
@@ -132,7 +139,8 @@ test-sdk_macos:
   tags:
     - macos
   only:
-   - merge_requests
+    - merge_requests
+    - web
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -153,7 +161,8 @@ test-sdk_linux:
   tags:
     - linux
   only:
-   - merge_requests
+    - merge_requests
+    - web
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -174,12 +183,14 @@ test-sdk_windows:
   tags:
     - windows
   only:
-   - merge_requests
+    - merge_requests
+    - web
   variables:
     GIT_CHECKOUT: "false"
   script:
     - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
     - conda activate openvibe
+    - $env:PYTHONHOME=$env:CONDA_PREFIX
     - echo "==== Testing SDK ===="
     - cd build/sdk/unit-test;
     - ctest -T test -E uoTimeTest -C Release --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml

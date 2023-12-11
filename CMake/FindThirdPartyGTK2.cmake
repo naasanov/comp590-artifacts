@@ -45,13 +45,11 @@ if(GTK2_FOUND)
              DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
              FILES_MATCHING PATTERN "*.dll")
 
-        if (EXISTS ${LIST_DEPENDENCIES_PATH}/gtk)
-            install(DIRECTORY ${GTK2_LIBRARY_DIRS}/gtk-2.0/i686-pc-vs10/engines/
-                    DESTINATION ${DIST_LIBDIR}/gtk-2.0/i686-pc-vs10/engines/
-                    FILES_MATCHING PATTERN "*.dll")
-            INSTALL(DIRECTORY ${GTK2_LIBRARY_DIRS}/../bin/
-                DESTINATION ${DIST_BINDIR}
+        install(DIRECTORY ${GTK2_LIBRARY_DIRS}/gtk-2.0/i686-pc-vs10/engines/
+                DESTINATION ${DIST_LIBDIR}/gtk-2.0/i686-pc-vs10/engines/
                 FILES_MATCHING PATTERN "*.dll")
-        endif()
+        INSTALL(DIRECTORY ${GTK2_LIBRARY_DIRS}/../../bin/gtk-2.0/
+            DESTINATION ${DIST_BINDIR}
+            FILES_MATCHING PATTERN "*.dll")
     endif()
 endif()
