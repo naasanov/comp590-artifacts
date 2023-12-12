@@ -99,17 +99,7 @@ add_definitions(-DOV_CMAKE_PATH_BIN="${DIST_ROOT}/${CMAKE_INSTALL_BINDIR}")
 add_definitions(-DOV_CMAKE_PATH_LIB="${DIST_ROOT}/${CMAKE_INSTALL_LIBDIR}")
 add_definitions(-DOV_CMAKE_PATH_DATA="${DIST_ROOT}/share/openvibe")
 
-# Set OV variables
-set(LIST_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies${DEPENDENCIES_ARCH}" CACHE PATH "Dependencies folder" )
-# Create a path usable by Unix shell scripts (used by .sh launchers)
-set(OV_PATH_DEPENCENCY_LIBS "")
-foreach(TMP ${LIST_DEPENDENCIES_PATH})
-	list(APPEND OV_PATH_DEPENDENCY_LIBS "${TMP}/lib")
-endforeach()
-string(REPLACE ";" ":" OV_PATH_PATH_DEPENDENCY_LIBS "${OV_PATH_DEPENDENCY_LIBS}")
-
 set(OV_CONFIG_SUBDIR "${PROJECT_NAME}-${PROJECT_VERSION}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
-
 set(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/test-data")
 
 
@@ -128,12 +118,6 @@ message(STATUS "  OV_PACKAGE = '${OV_PACKAGE}'")
 message(STATUS "  BUILD_VALIDATION_TEST = '${BUILD_VALIDATION_TEST}'")
 message(STATUS "  BUILD_UNIT_TEST = '${BUILD_UNIT_TEST}'")
 message(STATUS "  BUILD_DOCUMENTATION = '${BUILD_DOCUMENTATION}'")
-
-# Add some dependencies to PATH
-#Could (SHOULD) be replaced with find_path / find_package functionnalities
-set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/expat/bin")
-set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/vcredist")
-set(ENV{PATH} "$ENV{PATH};${LIST_DEPENDENCIES_PATH}/gtk/bin")
 
 # By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
 # Skip building documentation
