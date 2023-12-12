@@ -65,36 +65,6 @@ if (ALUT_FOUND)
     else()
         ov_print(OV_PRINTED "Found ALUT, but failed to find the lib")
     endif()
-
-else () # Try in usual path (for mac native user, linux ?)
-     find_path(PATH_ALUT AL/alut.h PATHS "/usr/local/opt /usr/local/lib")
-     if (PATH_ALUT)
-       SET(ALUT_INCLUDE_DIRS ${PATH_ALUT} )
-       SET(ALUT_LIBRARY_DIRS ${PATH_ALUT}/lib )
-     else()
-       ov_print(OV_PRINTED "Failed to find ALUT includes")
-     endif()
-
-     find_library (ALUT_Lib NAMES alut HINTS "/usr/local/opt /usr/local/lib")
-     if (NOT ALUT_Lib)
-          ov_print(OV_PRINTED "Failed to find ALUT")
-     else()
-
-       set(ALUT_LIB_NAMES "alut")
-
-       add_library(alut INTERFACE IMPORTED)
-
-       target_include_directories(alut INTERFACE ${ALUT_INCLUDE_DIRS} )
-       target_link_libraries(alut INTERFACE
-         ${ALUT_Lib}
-       )
-
-       mark_as_advanced(
-         ALUT_INCLUDE_DIR
-         ALUT_LIBRARY
-       )
-       SET(ALUT_FOUND True)
-     endif()
 endif()
 
 
