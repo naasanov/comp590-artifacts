@@ -23,15 +23,6 @@ find_package(PkgConfig REQUIRED)
 # Find OpenAL
 #
 
-
-# Fix issues with APPLE Framework. Need to get conda OpenAL and not Framework version
-
-if (APPLE AND (DEFINED ENV{CONDA_PREFIX}))
-  # save previous value
-  set(FRAMEWORK_POSITION ${CMAKE_FIND_FRAMEWORK})
-  set(CMAKE_FIND_FRAMEWORK NEVER)
-endif()
-
 find_package(OpenAL)
 
 if (OpenAL_FOUND)
@@ -41,14 +32,10 @@ else()
     ov_print(OV_PRINTED "Failed to find OpenAL, Vorbis or OGG")
 endif()
 
-if (APPLE AND (DEFINED ENV{CONDA_PREFIX}))
-  set(CMAKE_FIND_FRAMEWORK ${FRAMEWORK_POSITION})
-endif()
-
 
 ##
 # Find ALUT
-#
+# 
 pkg_check_modules(ALUT freealut)
     ov_print(OV_PRINTED "Checking for ALUT")
 
