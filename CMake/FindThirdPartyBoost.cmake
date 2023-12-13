@@ -5,9 +5,6 @@
 # ---------------------------------
 
 get_property(OV_PRINTED GLOBAL PROPERTY OV_TRIED_ThirdPartyBoost)
-if(EXISTS ${LIST_DEPENDENCIES_PATH}/boost)
-    set(ENV{BOOST_ROOT} ${LIST_DEPENDENCIES_PATH}/boost)
-endif()
 
 #set(Boost_NO_SYSTEM_PATHS ON)
 #set(Boost_USE_MULTITHREAD ON)

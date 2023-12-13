@@ -19,11 +19,20 @@
 
 find_package(PkgConfig REQUIRED)
 
+if (APPLE AND (DEFINED ENV{CONDA_PREFIX}))
+  # save previous value
+  set(FRAMEWORK_POSITION ${CMAKE_FIND_FRAMEWORK})
+  set(CMAKE_FIND_FRAMEWORK NEVER)
+endif()
+
 ##
 # Find OpenAL
 #
-
 find_package(OpenAL)
+
+if (APPLE AND (DEFINED ENV{CONDA_PREFIX}))
+  set(CMAKE_FIND_FRAMEWORK ${FRAMEWORK_POSITION})
+endif()
 
 if (OpenAL_FOUND)
     ov_print(OV_PRINTED "Found OpenAL")

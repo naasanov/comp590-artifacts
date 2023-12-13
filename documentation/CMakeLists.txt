@@ -1,8 +1,7 @@
 message(STATUS "***** Begin META Documentation *****")
 
 # look for doxygen, if not present, no need to generate documentation
-FIND_PROGRAM(doxygen_bin "doxygen" PATHS ${LIST_DEPENDENCIES_PATH}/bin NO_DEFAULT_PATH)
-FIND_PROGRAM(doxygen_bin "doxygen" PATHS ${LIST_DEPENDENCIES_PATH}/bin "C:/Program Files/doxygen/bin")
+FIND_PROGRAM(doxygen_bin "doxygen" PATHS $ENV{CONDA_PREFIX}/bin NO_DEFAULT_PATH)
 
 if(!doxygen_bin)
 	message(STATUS "  FAILED to find doxygen...")
