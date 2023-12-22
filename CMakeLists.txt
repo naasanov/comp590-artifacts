@@ -173,6 +173,7 @@ if (WIN32)
       PATTERN "intl.dll" EXCLUDE
       PATTERN "intl-8.dll" EXCLUDE
       PATTERN "iconv.dll" EXCLUDE
+      PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
 
   file (COPY $ENV{CONDA_PREFIX}/Library/bin/
@@ -182,6 +183,7 @@ if (WIN32)
         PATTERN "intl.dll" EXCLUDE
         PATTERN "intl-8.dll" EXCLUDE
         PATTERN "iconv.dll" EXCLUDE
+        PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
 endif()
 
