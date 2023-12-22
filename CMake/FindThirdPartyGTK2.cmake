@@ -48,12 +48,17 @@ if(GTK2_FOUND)
         file(COPY ${GTK2_LIBRARY_DIRS}/../../bin/gtk-2.0/
              DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
              FILES_MATCHING PATTERN "*.dll")
+        file(COPY ${GTK2_LIBRARY_DIRS}/../../etc/gtk-2.0/gtkrc
+             DESTINATION ${CMAKE_BINARY_DIR}/etc/gtk-2.0/)
 
         install(DIRECTORY ${GTK2_LIBRARY_DIRS}/gtk-2.0/i686-pc-vs10/engines/
                 DESTINATION ${DIST_LIBDIR}/gtk-2.0/i686-pc-vs10/engines/
                 FILES_MATCHING PATTERN "*.dll")
-        INSTALL(DIRECTORY ${GTK2_LIBRARY_DIRS}/../../bin/gtk-2.0/
+        install(DIRECTORY ${GTK2_LIBRARY_DIRS}/../../bin/gtk-2.0/
             DESTINATION ${DIST_BINDIR}
             FILES_MATCHING PATTERN "*.dll")
+        install(
+			FILES ${GTK2_LIBRARY_DIRS}/../../etc/gtk-2.0/gtkrc
+			DESTINATION ${DIST_SYSCONFDIR}/gtk-2.0/)
     endif()
 endif()
