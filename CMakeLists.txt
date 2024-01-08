@@ -52,7 +52,7 @@ endif("${isSystemDir}" STREQUAL "-1")
 
 include("Utilities")
 include("OvPrint")
-include("OvInstallLaunchScript")
+include("OvConfigureRC")
 
 set(BUILD_ARCH "x64" CACHE STRING "Architecture tu build for (x64 or x86)")
 if(${BUILD_ARCH} STREQUAL "x64")
@@ -166,7 +166,11 @@ include("FindThirdPartyTMSI")
 # install conda env libraries for execution
 # excluding a few that are not needed at runtime and collide with GTK dlls
 if (WIN32)
-	install(DIRECTORY $ENV{CONDA_PREFIX}/Library/bin/ 
+  # $env{CONDA_PREFIX} contains '\' on WIN32, causing parsing issues.
+  # Converting it to CMake PATH solves it.
+  file(TO_CMAKE_PATH $ENV{CONDA_PREFIX} CONDA_PREFIX)
+
+	install(DIRECTORY ${CONDA_PREFIX}/Library/bin/
 			DESTINATION ${DIST_BINDIR} 
 			FILES_MATCHING PATTERN "*.dll"
       PATTERN ".bit"
@@ -176,7 +180,7 @@ if (WIN32)
       PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
 
-  file (COPY $ENV{CONDA_PREFIX}/Library/bin/
+  file (COPY ${CONDA_PREFIX}/Library/bin/
         DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         FILES_MATCHING PATTERN "*.dll"
         PATTERN ".bit"
