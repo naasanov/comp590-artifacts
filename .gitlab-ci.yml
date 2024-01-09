@@ -8,6 +8,9 @@ build_mr_macos:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   script:
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout 63-add-package-management"
@@ -29,6 +32,9 @@ build_mr_linux:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   script:
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout 63-add-package-management"
@@ -50,6 +56,9 @@ build_mr_windows:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   script:
     - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
     - $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationpath
@@ -78,6 +87,9 @@ test-extras_macos:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -98,6 +110,9 @@ test-extras_linux:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
     DISPLAY: ":0"
@@ -119,6 +134,9 @@ test-extras_windows:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -141,6 +159,9 @@ test-sdk_macos:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -163,6 +184,9 @@ test-sdk_linux:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -185,6 +209,9 @@ test-sdk_windows:
   only:
     - merge_requests
     - web
+    - master
+    - development
+    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -208,6 +235,7 @@ conda-build-linux:
     - linux
   only:
     - master
+    - tags
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -220,6 +248,7 @@ conda-build-macos:
     - macos
   only:
     - master
+    - tags
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -232,6 +261,7 @@ conda-build-windows:
     - windows
   only:
     - master
+    - tags
   variables:
     GIT_CHECKOUT: "false"
   script:
