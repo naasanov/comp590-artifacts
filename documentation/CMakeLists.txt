@@ -1,7 +1,7 @@
 message(STATUS "***** Begin META Documentation *****")
 
 # look for doxygen, if not present, no need to generate documentation
-FIND_PROGRAM(doxygen_bin "doxygen" PATHS $ENV{CONDA_PREFIX}/bin NO_DEFAULT_PATH)
+FIND_PROGRAM(doxygen_bin "doxygen" PATHS $ENV{CONDA_PREFIX}/bin $ENV{CONDA_PREFIX}/Library/bin NO_DEFAULT_PATH)
 
 if(!doxygen_bin)
 	message(STATUS "  FAILED to find doxygen...")
@@ -144,7 +144,7 @@ else(!doxygen_bin)
 	#----- Config & Run doxygen -----
 	CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/documentation/Doxyfile-skeleton" "${CMAKE_SOURCE_DIR}/documentation/Doxyfile" @ONLY)
 	CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/documentation/Main-skeleton.md" "${CMAKE_SOURCE_DIR}/documentation/Main.md" @ONLY)
-	MESSAGE(STATUS "Running doxygen")
+	MESSAGE(STATUS "Running doxygen: ${doxygen_bin}")
 	EXECUTE_PROCESS(
 		COMMAND ${doxygen_bin} "${CMAKE_SOURCE_DIR}/documentation/Doxyfile"
 		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/documentation/"
