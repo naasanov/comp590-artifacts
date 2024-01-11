@@ -20,11 +20,13 @@ else(!doxygen_bin)
 	file(MAKE_DIRECTORY "${ROOT_DOC_DIR}/dox")
 
 	message(STATUS "    Folders for Documentation created")
-
 	#----- Run Plugin inspector -----
+
+	set(ENV{PYTHONHOME} $ENV{CONDA_PREFIX})
+
 	if(UNIX)
 		execute_process(
-			COMMAND  ${CMAKE_INSTALL_FULL_BINDIR}/../openvibe-plugin-inspector.sh 
+			COMMAND  ${CMAKE_INSTALL_FULL_BINDIR}/openvibe-plugin-inspector 
 				-d "${ROOT_DOC_DIR}" -p ${CMAKE_INSTALL_FULL_BINDIR}/../lib/ 
 				-k "${CMAKE_INSTALL_FULL_BINDIR}/../lib/" 
 				-c "${CMAKE_INSTALL_FULL_BINDIR}/../share/openvibe/kernel/openvibe.conf" 
@@ -32,7 +34,7 @@ else(!doxygen_bin)
 		)
 	elseif(WIN32)
 		execute_process(
-			COMMAND	${CMAKE_INSTALL_FULL_BINDIR}/../openvibe-plugin-inspector.cmd 
+			COMMAND	${CMAKE_INSTALL_FULL_BINDIR}/openvibe-plugin-inspector.exe
 				-d "${ROOT_DOC_DIR}" -p ${CMAKE_INSTALL_FULL_BINDIR}
 				-k "${CMAKE_INSTALL_FULL_BINDIR}"
 				-c "${CMAKE_INSTALL_FULL_BINDIR}/../share/openvibe/kernel/openvibe.conf" 
