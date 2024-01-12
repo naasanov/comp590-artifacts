@@ -10,12 +10,16 @@ build_mr_macos:
     - web
     - master
     - development
-    - 63-add-package-management
   script:
+    - if [ -n "$CI_MERGE_REQUEST_ID" ]; then
+        BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+      else
+         BRANCH_NAME=$CI_COMMIT_BRANCH
+      fi
     - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git checkout 63-add-package-management"
-    - git submodule foreach "git branch -D  $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true"
-    - git submodule foreach "git switch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || git switch 63-add-package-management" # todo put back development
+    - git submodule foreach "git checkout $BRANCH_NAME"
+    - git submodule foreach "git branch -D  $BRANCH_NAME || true"
+    - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
     - git submodule foreach "git pull"
     - mamba env update --file conda/env_osx.yaml
     - conda activate openvibe
@@ -34,12 +38,16 @@ build_mr_linux:
     - web
     - master
     - development
-    - 63-add-package-management
   script:
+    - if [ -n "$CI_MERGE_REQUEST_ID" ]; then
+        BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+      else
+         BRANCH_NAME=$CI_COMMIT_BRANCH
+      fi
     - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git checkout 63-add-package-management"
-    - git submodule foreach "git branch -D  $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true"
-    - git submodule foreach "git switch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || git switch 63-add-package-management" # todo put back development
+    - git submodule foreach "git checkout $BRANCH_NAME"
+    - git submodule foreach "git branch -D  $BRANCH_NAME || true"
+    - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
     - git submodule foreach "git pull"
     - mamba env update --file conda/env_linux.yaml 
     - conda activate openvibe
@@ -58,16 +66,20 @@ build_mr_windows:
     - web
     - master
     - development
-    - 63-add-package-management
   script:
     - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
     - $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationpath
     - Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
     - Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -DevCmdArguments '-arch=x64'
+    - if [ -n "$CI_MERGE_REQUEST_ID" ]; then
+        BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+      else
+         BRANCH_NAME=$CI_COMMIT_BRANCH
+      fi
     - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git checkout 63-add-package-management"
-    - git submodule foreach "git branch -D $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true"
-    - git submodule foreach "git switch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || git switch 63-add-package-management" # todo put back development
+    - git submodule foreach "git checkout $BRANCH_NAME"
+    - git submodule foreach "git branch -D  $BRANCH_NAME || true"
+    - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
     - git submodule foreach "git pull"
     - mamba env update --file conda/env_windows.yaml 
     - conda activate openvibe
@@ -89,7 +101,6 @@ test-extras_macos:
     - web
     - master
     - development
-    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -112,7 +123,6 @@ test-extras_linux:
     - web
     - master
     - development
-    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
     DISPLAY: ":0"
@@ -136,7 +146,6 @@ test-extras_windows:
     - web
     - master
     - development
-    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -161,7 +170,6 @@ test-sdk_macos:
     - web
     - master
     - development
-    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -186,7 +194,6 @@ test-sdk_linux:
     - web
     - master
     - development
-    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
@@ -211,7 +218,6 @@ test-sdk_windows:
     - web
     - master
     - development
-    - 63-add-package-management
   variables:
     GIT_CHECKOUT: "false"
   script:
