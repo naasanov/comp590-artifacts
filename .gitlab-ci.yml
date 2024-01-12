@@ -11,7 +11,7 @@ build_mr_macos:
     - master
     - development
   script:
-    - if [ -n "$CI_MERGE_REQUEST_ID" ]; then
+    - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
         BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
       else
          BRANCH_NAME=$CI_COMMIT_BRANCH
@@ -39,7 +39,7 @@ build_mr_linux:
     - master
     - development
   script:
-    - if [ -n "$CI_MERGE_REQUEST_ID" ]; then
+    - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
         BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
       else
          BRANCH_NAME=$CI_COMMIT_BRANCH
@@ -71,7 +71,7 @@ build_mr_windows:
     - $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationpath
     - Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
     - Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -DevCmdArguments '-arch=x64'
-    - if [ -n "$CI_MERGE_REQUEST_ID" ]; then
+    - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
         BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
       else
          BRANCH_NAME=$CI_COMMIT_BRANCH
