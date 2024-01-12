@@ -8,6 +8,7 @@ dependencies:
 - cmake=3.25
 - pkg-config
 - vs2019_win-64=19.29.30139
+- vs2013_runtime
 - ninja=1.10.0
 - numpy
 #- qt6-main=6.4.3

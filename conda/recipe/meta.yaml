@@ -79,6 +79,7 @@ requirements:
     - sdk-eemagine-eego  #[win]
     - sdk-micromed       #[win]
     - sdk-tmsi           #[win]
+    - vs2013_runtime     #[win]
 
   run:
     - {{ pin_compatible('numpy', max_pin='x.x') }}
