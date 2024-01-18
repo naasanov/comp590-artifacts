@@ -17,7 +17,7 @@ build_mr_macos:
          BRANCH_NAME=$CI_COMMIT_BRANCH;
       fi
     - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git checkout $BRANCH_NAME"
+    - git submodule foreach "git checkout development"
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
     - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
     - git submodule foreach "git pull"
@@ -45,7 +45,7 @@ build_mr_linux:
          BRANCH_NAME=$CI_COMMIT_BRANCH;
       fi
     - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git checkout $BRANCH_NAME"
+    - git submodule foreach "git checkout development"
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
     - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
     - git submodule foreach "git pull"
@@ -78,7 +78,7 @@ build_mr_windows:
          $BRANCH_NAME=$CI_COMMIT_BRANCH
       }
     - git submodule foreach "git fetch --prune"
-    - git submodule foreach "git checkout $BRANCH_NAME"
+    - git submodule foreach "git checkout development"
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
     - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
     - git submodule foreach "git pull"
