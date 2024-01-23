@@ -14,12 +14,12 @@ build_mr_macos:
     - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
         BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME;
       else
-         BRANCH_NAME=$CI_COMMIT_BRANCH;
+        BRANCH_NAME=$CI_COMMIT_BRANCH;
       fi
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout development"
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
-    - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
+    - git submodule foreach "git switch $BRANCH_NAME || true"
     - git submodule foreach "git pull"
     - mamba env update --file conda/env_osx.yaml
     - conda activate openvibe
@@ -42,12 +42,12 @@ build_mr_linux:
     - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
         BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME;
       else
-         BRANCH_NAME=$CI_COMMIT_BRANCH;
+        BRANCH_NAME=$CI_COMMIT_BRANCH;
       fi
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout development"
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
-    - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
+    - git submodule foreach "git switch $BRANCH_NAME || true"
     - git submodule foreach "git pull"
     - mamba env update --file conda/env_linux.yaml 
     - conda activate openvibe
@@ -75,12 +75,12 @@ build_mr_windows:
         $BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
       }
       else {
-         $BRANCH_NAME=$CI_COMMIT_BRANCH
+        $BRANCH_NAME=$CI_COMMIT_BRANCH
       }
     - git submodule foreach "git fetch --prune"
     - git submodule foreach "git checkout development"
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
-    - git submodule foreach "git switch $BRANCH_NAME || git switch development" # Might only switch to dev for a MR triggered pipeline
+    - git submodule foreach "git switch $BRANCH_NAME || true"
     - git submodule foreach "git pull"
     - mamba env update --file conda/env_windows.yaml 
     - conda activate openvibe
