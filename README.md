@@ -4,20 +4,13 @@
 [![Doxygen Documentation](https://img.shields.io/badge/Doc-Doxygen%20Documentation-informational)](http://openvibe.inria.fr/documentation/latest/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-|Build Status :|   |
-|:-------------|:-:|
-|Ubuntu 20.04 x64|[![Build Status](https://ci.inria.fr/openvibe/buildStatus/icon?job=OV-Nightly-Ubuntu20.04&style=plastic)](https://ci.inria.fr/openvibe/job/OV-Nightly-Ubuntu20.04/)|
-|Fedora 31 x64|[![Build Status](https://ci.inria.fr/openvibe/buildStatus/icon?job=OV-Nightly-Fedora31&style=plastic)](https://ci.inria.fr/openvibe/job/OV-Nightly-Fedora31/)|
-|Windows 10 x64|[![Build Status](https://ci.inria.fr/openvibe/buildStatus/icon?job=OV-Nightly-Win10-x64&style=plastic)](https://https://ci.inria.fr/openvibe/job/OV-Nightly-Win10-x64/)|
-|Windows 10 x86|[![Build Status](https://ci.inria.fr/openvibe/buildStatus/icon?job=OV-Nightly-Win10-x86&style=plastic)](https://ci.inria.fr/openvibe/job/OV-Nightly-Win10-x86/)|
-
 OpenViBE project is now divided into 3 parts :
 
 - SDK, that contains the certifiable core and plugins of OpenViBE
 - Designer, the graphical interface for OpenViBE
 - Extras, for community plugins and contributions
 
-The current repository, OpenViBE-meta, exist to bring the three repositories together and build the project.
+The current repository, OpenViBE-meta, exists to bring the three repositories together and build the project.
 
 # User Install
 
