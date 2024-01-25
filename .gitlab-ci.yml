@@ -21,6 +21,7 @@ build_mr_macos:
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
     - git submodule foreach "git switch $BRANCH_NAME || true"
     - git submodule foreach "git pull"
+    - conda env remove -n openvibe
     - mamba env update --file conda/env_osx.yaml
     - conda activate openvibe
     - rm -rf build
@@ -49,6 +50,7 @@ build_mr_linux:
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
     - git submodule foreach "git switch $BRANCH_NAME || true"
     - git submodule foreach "git pull"
+    - conda env remove -n openvibe
     - mamba env update --file conda/env_linux.yaml 
     - conda activate openvibe
     - rm -rf build
@@ -82,6 +84,7 @@ build_mr_windows:
     - git submodule foreach "git branch -D  $BRANCH_NAME || true"
     - git submodule foreach "git switch $BRANCH_NAME || true"
     - git submodule foreach "git pull"
+    - conda env remove -n openvibe
     - mamba env update --file conda/env_windows.yaml 
     - conda activate openvibe
     - (Remove-Item  "build" -ErrorAction Ignore -Recurse)
