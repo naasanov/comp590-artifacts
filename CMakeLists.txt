@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 
-cmake_policy(SET CMP0026 OLD)
-cmake_policy(SET CMP0039 NEW)
-cmake_policy(SET CMP0042 OLD)
-cmake_policy(SET CMP0043 OLD)
-cmake_policy(SET CMP0045 OLD)
-cmake_policy(SET CMP0048 NEW)
-cmake_policy(SET CMP0057 NEW)
-
 set(OPENVIBE_MAJOR_VERSION 3)
 set(OPENVIBE_MINOR_VERSION 6)
 set(OPENVIBE_PATCH_VERSION 0)
