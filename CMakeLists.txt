@@ -4,7 +4,7 @@ set(OPENVIBE_MAJOR_VERSION 3)
 set(OPENVIBE_MINOR_VERSION 6)
 set(OPENVIBE_PATCH_VERSION 0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(OpenVIBE VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
@@ -13,6 +13,12 @@ set(CMAKE_MODULE_PATH_BASE "${CMAKE_SOURCE_DIR}/CMake")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH_BASE}
                       ${CMAKE_MODULE_PATH_BASE}/drivers
 )
+
+## #################################################################
+## Generate compilation database
+## #################################################################
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
 
 ## ###################################################################
@@ -145,6 +151,7 @@ include("FindThirdPartyVRPN")
 include("FindThirdPartyZLib")
 include("FindThirdPartyOpenGL")
 include("FindThirdPartyXercesC")
+include("FindThirdPartyQt")
 
 # #############################################################################
 # Find Acquisition Drivers
@@ -181,10 +188,6 @@ if (WIN32)
         PATTERN "iconv.dll" EXCLUDE
         PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
-endif()
-
-if(QT_KNOWN_POLICY_QTP0001)
-  qt_policy(SET QTP0001 NEW)
 endif()
 
 # #############################################################################
