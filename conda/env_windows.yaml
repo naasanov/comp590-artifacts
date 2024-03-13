@@ -31,7 +31,6 @@ dependencies:
 - vrpn=7.31
 - fftw=3.3.10
 - itpp=4.3.1
-- openvibe::gtk-2
 - sdk-brain-products
 - sdk-gtec-unicorn
 - sdk-eemagine-eego

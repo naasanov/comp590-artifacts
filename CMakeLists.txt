@@ -141,7 +141,6 @@ include("FindThirdPartyEigen")
 include("FindThirdPartyExpat")
 include("FindThirdPartyFFTW3")
 include("FindThirdPartyGTest")
-include("FindThirdPartyGTK2")
 include("FindThirdPartyITPP")
 include("FindThirdPartyLSL")
 include("FindThirdPartyLua")
@@ -189,6 +188,10 @@ if (WIN32)
         PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
 endif()
+
+# #############################################################################
+# CMake Utils
+include(GenerateExportHeader)
 
 # #############################################################################
 # Add OpenViBE subdirectories
