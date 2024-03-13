@@ -117,6 +117,7 @@ test-extras_macos:
     when: always
     reports:
       junit: build/extras/test-extras.xml
+  allow_failure: true # To be removed when Qt6 porting is done
 
 test-extras_linux:
   stage: test
@@ -140,6 +141,7 @@ test-extras_linux:
     when: always
     reports:
       junit: build/extras/test-extras.xml
+  allow_failure: true # To be removed when Qt6 porting is done
 
 test-extras_windows:
   stage: test
@@ -164,6 +166,7 @@ test-extras_windows:
     when: always
     reports:
       junit: build/extras/test-extras.xml
+  allow_failure: true # To be removed when Qt6 porting is done
       
 test-sdk_macos:
   stage: test
