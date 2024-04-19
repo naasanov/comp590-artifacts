@@ -178,6 +178,16 @@ if (WIN32)
       PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
 
+  install(DIRECTORY ${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}/
+      DESTINATION ${DIST_BINDIR}
+  )
+  install(DIRECTORY ${QT6_INSTALL_PREFIX}/${QT6_INSTALL_PLUGINS}/
+      DESTINATION ${DIST_ROOT}/plugins/
+  )
+  install(DIRECTORY ${QT6_INSTALL_PREFIX}/${QT6_INSTALL_QML}/
+      DESTINATION ${DIST_ROOT}/qml/
+  )
+
   file (COPY ${CONDA_PREFIX}/Library/bin/
         DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         FILES_MATCHING PATTERN "*.dll"
@@ -187,6 +197,17 @@ if (WIN32)
         PATTERN "iconv.dll" EXCLUDE
         PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
+
+  file(COPY ${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}/
+      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+  )
+  file(COPY ${QT6_INSTALL_PREFIX}/${QT6_INSTALL_PLUGINS}
+      DESTINATION ${CMAKE_BINARY_DIR}/
+  )
+  file(COPY ${QT6_INSTALL_PREFIX}/${QT6_INSTALL_QML}/
+      DESTINATION ${CMAKE_BINARY_DIR}/qml/
+  )
+
 endif()
 
 # #############################################################################
