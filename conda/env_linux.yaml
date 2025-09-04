@@ -3,6 +3,7 @@ name: openvibe
 channels:
 - openvibe
 - conda-forge
+- nodefaults
 
 dependencies:
 - cmake=3.25
@@ -61,3 +62,13 @@ dependencies:
 - libice-devel-cos7-x86_64
 - libxt-devel-cos7-x86_64
 - libsm-devel-cos7-x86_64
+
+# For code quality
+- gcovr
+- cppcheck
+- valgrind
+- clang
+- clang-tools
+- lcov
+# - vera++
+# - libexpat1-dev

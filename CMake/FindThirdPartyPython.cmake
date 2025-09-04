@@ -27,3 +27,4 @@ get_filename_component(PYTHON3_HOME ${Python3_EXECUTABLE} DIRECTORY)
 target_compile_definitions(Python3::Python INTERFACE -DPYTHON_HOME="${PYTHON3_HOME}")
 
 set_property(GLOBAL PROPERTY OV_TRIED_ThirdPartyPython "Yes")
+

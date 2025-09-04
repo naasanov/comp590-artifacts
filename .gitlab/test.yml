@@ -1,0 +1,142 @@
+---
+
+test-extras_macos:
+  stage: test
+  needs: [build_openvibe_macosx]
+  variables:
+    GIT_STRATEGY: none
+  tags:
+    - macos
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  script:
+   - conda activate openvibe
+   - cd build/extras;
+   - echo "==== Testing Extras ===="
+   - ctest -V -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
+  artifacts:
+    when: always
+    reports:
+      junit: build/extras/test-extras.xml
+  allow_failure: true # To be removed when Qt6 porting is done
+
+test-extras_linux:
+  stage: test
+  needs: [build_openvibe_linux]
+  tags:
+    - linux
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  variables:
+    GIT_STRATEGY: none
+    DISPLAY: ":0"
+  script:
+    - conda activate openvibe
+    - cd build/extras;
+    - echo "==== Testing Extras ===="
+    - ctest -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
+  artifacts:
+    when: always
+    reports:
+      junit: build/extras/test-extras.xml
+  allow_failure: true # To be removed when Qt6 porting is done
+
+test-extras_windows:
+  stage: test
+  needs: [build_openvibe_windows]
+  variables:
+    GIT_STRATEGY: none
+  tags:
+    - windows
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  script:
+    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
+    - conda activate openvibe
+    - $env:PYTHONHOME=$env:CONDA_PREFIX
+    - cd build/extras;
+    - echo "==== Testing Extras ===="
+    - ctest -V -T test --rerun-failed --output-on-failure --output-junit test-extras.xml
+  artifacts:
+    when: always
+    reports:
+      junit: build/extras/test-extras.xml
+  allow_failure: true # To be removed when Qt6 porting is done
+      
+test-sdk_macosx:
+  stage: test
+  needs: [build_openvibe_macosx]
+  tags:
+    - macos
+  only:
+    - merge_requests
+    - web
+    - master
+    - development
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - conda activate openvibe
+    - echo "==== Testing SDK ===="
+    - cd build/sdk/unit-test;
+    - ctest -V -T test -E uoTimeTest --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml
+    - cd ../validation-test;
+    - ctest -V -T test --rerun-failed --output-on-failure --output-junit test-sdk_validation.xml
+  artifacts:
+    when: always
+    reports:
+      junit: build/sdk/**/test-sdk_*.xml
+  allow_failure: true # To be removed when Qt6 porting is done
+        
+test-sdk_linux:
+  stage: test
+  needs: [build_openvibe_linux]
+  tags:
+    - linux
+  only:
+    - merge_requests
+    - web
+    - master
+    - development
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - conda activate openvibe
+    - echo "==== Testing SDK ===="
+    - cd build/sdk/unit-test;
+    - ctest -V -T test  --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml
+    - cd ../validation-test;
+    - ctest -V -T test --rerun-failed --output-on-failure --output-junit test-sdk_validation.xml
+  artifacts:
+    when: always
+    reports:
+      junit: build/sdk/**/test-sdk_*.xml
+  allow_failure: true # To be removed when Qt6 porting is done
+        
+test-sdk_windows:
+  stage: test
+  needs: [build_openvibe_windows]
+  tags:
+    - windows
+  only:
+    - merge_requests
+    - web
+    - master
+    - development
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
+    - conda activate openvibe
+    - $env:PYTHONHOME=$env:CONDA_PREFIX
+    - echo "==== Testing SDK ===="
+    - cd build/sdk/unit-test;
+    - ctest -V -T test -E uoTimeTest -C Release --rerun-failed --output-on-failure --output-junit test-sdk_unit.xml
+    - cd ../validation-test;
+    - ctest -V -T test -C Release --rerun-failed --output-on-failure --output-junit test-sdk_validation.xml
+  artifacts:
+    when: always
+    reports:
+      junit: build/sdk/**/test-sdk_*.xml
+  allow_failure: true # To be removed when Qt6 porting is done
+
