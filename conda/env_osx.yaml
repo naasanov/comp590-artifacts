@@ -3,11 +3,12 @@ name: openvibe
 channels:
 - conda-forge
 - openvibe
+- nodefaults
 
 dependencies:
 - cmake=3.25
 - pkg-config
-- clangxx_osx-64=14.0.6
+- clangxx_osx-64=16
 - ninja=1.10.0
 - numpy
 - qt6-main=6.8

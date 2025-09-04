@@ -108,6 +108,7 @@ option(OV_PACKAGE "Create a package in build directory" OFF)
 option(BUILD_VALIDATION_TEST "Build the validation tests" ON)
 option(BUILD_UNIT_TEST "Build the unit tests" ON)
 option(BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
+option(BUILD_GCOV "Add coverage compilation options" OFF)
 
 message(STATUS "META OPTIONS : ")
 message(STATUS "  Flag_VerboseOutput = '${Flag_VerboseOutput}'")
@@ -197,6 +198,20 @@ if (WIN32)
         PATTERN "iconv.dll" EXCLUDE
         PATTERN "gtk-2.0" EXCLUDE # GTK2 copy managed in GTK Find module
   )
+
+endif()
+
+# #############################################################################
+# Add test coverage options
+
+if (BUILD_GCOV)
+# From https://gcc.gnu.org/onlinedocs/gcc-6.1.0/gcc/Instrumentation-Options.html#Instrumentation-Options
+# --coverage
+# This option is used to compile and link code instrumented for coverage analysis. The option is a synonym for -fprofile-arcs -ftest-coverage (when compiling) and -lgcov (when linking). See the documentation for those options for more details.
+# The code have to be execute to be able to see any results
+# https://en.wikipedia.org/wiki/Gcov#Example
+  set(GCC_COVERAGE_COMPILE_FLAGS " --coverage -O0 -g -fPIC -Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 
 endif()
 

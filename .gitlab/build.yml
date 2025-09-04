@@ -1,0 +1,100 @@
+---
+
+.build_script_linux_template: &build_script_linux
+  stage: build
+  tags: ['linux']
+  needs: ['update_repo_linux']
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  script:
+#    - pip install scan-build
+    - source .gitlab/build.sh | tee ${LOGNAME}.log
+  artifacts:
+    paths:
+      - build/compile_commands.json
+      - build/analyzer_reports
+      - build/build.log
+    expire_in: 1 week
+    when: always
+
+build_openvibe_linux:
+  <<: *build_script_linux
+  variables:
+    SYSTEM: linux
+    LOGNAME: "${CI_PROJECT_NAME}-build-${SYSTEM}"
+    GIT_STRATEGY: none
+
+.build_script_macosx_template: &build_script_macosx
+  stage: build
+  tags: ['macos','sonoma']
+  needs: [update_repo_macosx]
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  script:
+    - source .gitlab/build.sh | tee ${LOGNAME}.log
+  artifacts:
+    expire_in: 1 week
+    when: always
+    paths:
+      - build/compile_commands.json
+      - build/build.log
+      - build/analyzer_reports
+  cache:
+    key: "${SYSTEM}-$CI_COMMIT_REF_SLUG"
+    untracked: true
+    policy: push
+
+build_openvibe_macosx:
+  <<: *build_script_macosx
+  variables:
+    SYSTEM: macosx
+    LOGNAME: "${CI_PROJECT_NAME}-build-${SYSTEM}"
+    GIT_STRATEGY: none
+
+.build_script_windows_template: &build_script_windows
+  stage: build
+  tags: ['windows']
+  needs: [update_repo_windows]
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  script:
+    - . C:\Users\ci\miniconda3\shell\condabin\conda-hook.ps1
+    - $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationpath
+    - Import-Module (Get-ChildItem $vsPath -Recurse -File -Filter Microsoft.VisualStudio.DevShell.dll).FullName
+    - Enter-VsDevShell -VsInstallPath $vsPath -SkipAutomaticLocation -DevCmdArguments '-arch=x64'
+    # Failed first time :
+    # DirectoryNotACondaEnvironmentError: The target directory exists, but it is not a conda environment.
+    #    - conda env remove -n openvibe
+    - (Remove-Item  "C:\Users\ci\miniconda3\envs\openvibe" -ErrorAction Ignore -Recurse)
+    - Get-ChildItem -Force
+    - $env:PATH += ";C:\Users\ci\miniconda3\Library\bin;C:\Users\ci\miniconda3\bin;"
+    - $env:PATH
+    # create from scratch
+#    - mamba env remove -n openvibe
+    - mamba env create -f conda/env_windows.yaml -v
+    # Update
+    #    - mamba env update --file conda/env_windows.yaml
+    - conda activate openvibe
+    - (Remove-Item  "build" -ErrorAction Ignore -Recurse)
+    - mkdir build
+    - cd build
+    - $env:Qt6_DIR = "C:\Qt\6.6.3\msvc2019_64\lib\cmake\"
+    - cmake .. -G Ninja #                            OpenVibe
+    - ninja -j1
+  artifacts:
+    paths:
+      - build/compile_commands.json
+    expire_in: 1 week
+  cache:
+    key: "${SYSTEM}-$CI_COMMIT_REF_SLUG"
+    untracked: true
+    policy: push
+
+build_openvibe_windows:
+  <<: *build_script_windows
+  variables:
+    SYSTEM: windows
+    CHERE_INVOKING: "yes"
+    MSYSTEM: UCRT64
+    LOGNAME: "${CI_PROJECT_NAME}-build-${SYSTEM}"
+    GIT_STRATEGY: none

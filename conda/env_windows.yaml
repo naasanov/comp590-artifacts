@@ -3,21 +3,22 @@ name: openvibe
 channels:
 - conda-forge
 - openvibe
+- nodefaults
 
 dependencies:
 - cmake=3.25
 - pkg-config
 - vs2019_win-64=19.29.30139
-- vs2013_runtime
+- anaconda::vs2013_runtime
 - ninja=1.10.0
 - numpy
-#- qt6-main=6.6
-#- qt6-charts=6.6
-#- qt6-graphs=6.6
-- boost-cpp=1.85 #(bump mineur 1.71)
+#- qt6-main=6.8
+#- qt6-charts=6.8
+#- qt6-graphs=6.8
+- boost-cpp=1.83 #(bump mineur 1.71)
 - eigen=3.3.8 #(bump patch 3.3.7)
-- gtest=1.10.0 #(bump mineur 1.8.0)
-- gmock=1.10.0
+- gtest=1.17.0 #(bump mineur 1.8.0)
+- gmock=1.17.0
 - tinyxml2=9.0.0
 - expat=2.6.4 #(bump mineur 2.1.0)
 - xerces-c=3.3.0 #(bump mineur 3.1.3)

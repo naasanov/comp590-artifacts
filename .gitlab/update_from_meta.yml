@@ -1,0 +1,75 @@
+#
+# This file list the preliminary checks done before trying to compile
+#
+---
+.update_repo: &update_repo_script
+  stage: .pre
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  variables:
+    GIT_STRATEGY: fetch
+  script:
+    - git submodule update --init --recursive
+    - echo "== Update repository =="
+    - git submodule foreach "git status"
+    - echo "Host IP"; hostname | awk '{print $1}'
+    - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
+        BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME;
+        echo "MR on $BRANCH_NAME";
+      else
+        BRANCH_NAME=$CI_COMMIT_BRANCH;
+        echo "Commit on $BRANCH_NAME";
+      fi
+    - git reset --hard
+    - git submodule foreach "git fetch --prune"
+    - git switch $BRANCH_NAME
+    - git pull
+    - git submodule foreach "git checkout qt6"       # Using default branch for basis 
+
+    - if [[ $BUILD_QT6_BRANCH == "true" ]]; then
+         echo " ===== Update on qt6 =====";
+         git switch qt6 ;git submodule foreach "git switch qt6 || true";
+         git checkout $BRANCH_NAME -- .gitlab tools .gitlab-ci.yml conda;
+      else
+        echo " ===== Update on $BRANCH_NAME ======";git submodule foreach "git switch $BRANCH_NAME || true";
+      fi
+    - git submodule foreach "git pull || true";
+    - echo "======================="
+    - git log --oneline -n 2;
+    - git submodule foreach "git log --oneline -n 2";
+    - echo "======================="
+update_repo_linux:
+  tags: ['linux']
+  <<: *update_repo_script
+
+update_repo_macosx:
+  tags: ['macos']
+  <<: *update_repo_script
+
+
+update_repo_windows:
+  stage: .pre
+  variables:
+    GIT_STRATEGY: fetch
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  tags: ['windows']
+  script:
+    - if ($CI_MERGE_REQUEST_ID) {
+        $BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME 
+      }
+      else {
+        $BRANCH_NAME=$CI_COMMIT_BRANCH
+      }
+    - git submodule foreach "git fetch --prune"
+    - git submodule foreach "git checkout qt6"
+    - git submodule foreach "git branch -D  $BRANCH_NAME || true"
+    - git submodule foreach "git switch $BRANCH_NAME || true"
+    - git submodule foreach "git pull"
+    
+    - echo "======================="
+    - git log --oneline -n 2;
+    - git submodule foreach "git log --oneline -n 2";
+    - echo "======================="
+
+        
