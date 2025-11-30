@@ -136,6 +136,7 @@ set(VALIDATION_FOLDER Validation-Tests)
 
 # #############################################################################
 # Find external projects
+include("FindThirdPartyGTK2")
 include("FindThirdPartyPython")
 include("FindThirdPartyBoost")
 include("FindThirdPartyEigen")
