@@ -1,0 +1,48 @@
+set(CLASSIFIERS LDA sLDA)
+set(METHODS Native OneVsOne-HT OneVsOne-PKPD OneVsOne-Voting OneVsAll)
+
+foreach(CLASSIFIER ${CLASSIFIERS})
+	foreach(METHOD ${METHODS})
+		# Compare SVM and MLP have not exactly the same value each time
+		validation_test_with_xml(scenarios-tests ${CLASSIFIER}-${METHOD})
+	endforeach(METHOD)
+endforeach(CLASSIFIER)
+
+# Compare SVM and MLP have not exactly the same value each time
+set(CLASSIFIERS SVM MLP)
+foreach(CLASSIFIER ${CLASSIFIERS})
+	foreach(METHOD ${METHODS})
+		validation_test_without_comparison(scenarios-tests ${CLASSIFIER}-${METHOD})
+	endforeach(METHOD)
+endforeach(CLASSIFIER)
+
+# Processor
+validation_test_with_csv(scenarios-tests Classifier-Processor)
+
+# Shrinkage LDA tests. These are in a different block as they use different data (and miss ProcessorBox part)
+
+set(TEST_SCENARIOS shrinkage_lda shrinkage_lda_rot)
+set(TEST_THRESHOLD 80)
+
+foreach(TEST_NAME ${TEST_SCENARIOS})
+
+	set(SCENARIO_TO_TEST "shrinkageLDA/${TEST_NAME}.xml")
+
+	add_test(clean_Classification_${TEST_NAME} "${CMAKE_COMMAND}" "-E" "remove" "-f" ${OV_LOGFILE})
+	add_test(run_Classification_${TEST_NAME} "$ENV{OV_BINARY_PATH}/openvibe-designer" ${OS_FLAGS} "--invisible"  "--no-session-management" --define Plugin_Classification_RandomizeKFoldTestData true "--play-fast" ${SCENARIO_TO_TEST})
+	add_test(compare_Classification_${TEST_NAME} "$ENV{OV_BINARY_PATH}/test_accuracy" ${OS_FLAGS} ${OV_LOGFILE} ${TEST_THRESHOLD})
+	
+	# It would be better to clean last, but we can't do this as it will delete the 
+	# output we wish to include, and we can't prevent clean from running if a prev. test fails
+	# We need the clean to be sure that the comparator stage is not getting data from a previous run.
+	set_tests_properties(run_Classification_${TEST_NAME} PROPERTIES DEPENDS clean_Classification_${TEST_NAME})
+	set_tests_properties(run_Classification_${TEST_NAME} PROPERTIES ATTACHED_FILES_ON_FAIL ${OV_LOGFILE})
+
+	set_tests_properties(compare_Classification_${TEST_NAME} PROPERTIES DEPENDS run_Classification_${TEST_NAME})
+	set_tests_properties(compare_Classification_${TEST_NAME} PROPERTIES ATTACHED_FILES_ON_FAIL ${OV_LOGFILE})
+	
+	set_tests_properties(run_Classification_${TEST_NAME}_ProcessorBox PROPERTIES DEPENDS run_Classification_${TEST_NAME})
+	set_tests_properties(run_Classification_${TEST_NAME}_ProcessorBox PROPERTIES ATTACHED_FILES_ON_FAIL ${OV_LOGFILE})
+	
+endforeach(TEST_NAME)
+	

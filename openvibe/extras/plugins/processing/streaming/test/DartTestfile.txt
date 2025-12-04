@@ -1,0 +1,5 @@
+validation_test_with_csv(scenarios-tests Signal-Merger)
+validation_test_with_csv(scenarios-tests Stream-Switch)
+validation_test_with_csv(scenarios-tests Input-Switch)
+validation_test_with_csv(scenarios-tests Stimulation-Multiplexer)
+validation_test_with_csv(scenarios-tests Matrix-Multiplexer)

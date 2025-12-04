@@ -1,0 +1,2 @@
+validation_test_with_csv(scenarios-tests Features-Selector)
+validation_test_with_xml(scenarios-tests Features-Selection)

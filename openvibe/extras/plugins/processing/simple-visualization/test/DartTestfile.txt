@@ -1,0 +1,8 @@
+validation_test_visualization(scenarios-tests Display-cue-image)
+validation_test_visualization(scenarios-tests ERP-plot)
+validation_test_visualization(scenarios-tests Multimodal-Graz-visualization)
+if (NOT APPLE)
+    validation_test_visualization(scenarios-tests Power-Spectrum)
+    validation_test_visualization(scenarios-tests Topography)
+endif()
+validation_test_visualization(scenarios-tests Simple-visualization)

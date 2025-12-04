@@ -1,0 +1,3 @@
+validation_test_with_csv("" Sinus-Oscillator)
+validation_test_without_comparison("" Noise-Generator)
+validation_test_with_csv("" Time-Signal)

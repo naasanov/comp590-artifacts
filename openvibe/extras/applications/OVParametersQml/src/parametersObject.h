@@ -1,0 +1,6 @@
+#include "parameterBoolObject.h"
+#include "parameterDoubleObject.h"
+#include "parameterIntObject.h"
+#include "parameterListStringObject.h"
+#include "parameterObject.h"
+#include "parameterStringObject.h"

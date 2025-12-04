@@ -1,0 +1,13 @@
+---
+stages:
+  - .pre
+  - build
+  - test
+  - analyze
+
+include:
+  - .gitlab/common.yml
+  - .gitlab/update_from_meta.yml
+  - .gitlab/build.yml
+  - .gitlab/test.yml
+  - .gitlab/analyse.yml

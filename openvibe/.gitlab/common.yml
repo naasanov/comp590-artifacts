@@ -1,0 +1,15 @@
+#
+# This file describes the common rules for the stages
+#
+---
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+# to have a small subset of openvibe. Fastest way to test, set to "true"
+# to have a all openvibe, set to "false"
+  TEST_PIPELINE_ONLY: "false"
+
+# true: Will force a new qt6 branch to be built and sent to sonarqube analysis for comparison
+  BUILD_QT6_BRANCH: "false"
+
+  GIT_STRATEGY: none

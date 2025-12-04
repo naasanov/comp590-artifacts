@@ -1,0 +1,13 @@
+validation_test_with_csv(scenarios-tests Covariance-Matrix-Calculator)
+validation_test_with_csv(scenarios-tests Covariance-Mean-Calculator)
+validation_test_with_csv(scenarios-tests Covariance-To-Feature)
+validation_test_with_csv(scenarios-tests Feature-To-Covariance)
+
+validation_test_with_xml(scenarios-tests Matrix-Classifier-Training-MDM)
+validation_test_with_xml(scenarios-tests Matrix-Classifier-Training-MDM-Rebias)
+validation_test_with_xml(scenarios-tests Matrix-Classifier-Training-FgMDM)
+validation_test_with_xml(scenarios-tests Matrix-Classifier-Training-FgMDM-Rebias)
+
+validation_test_with_csv(scenarios-tests Matrix-Classifier-Testing)
+validation_test_with_csv(scenarios-tests Matrix-Classifier-Testing-Supervised)
+validation_test_with_csv(scenarios-tests Matrix-Classifier-Testing-Unsupervised)

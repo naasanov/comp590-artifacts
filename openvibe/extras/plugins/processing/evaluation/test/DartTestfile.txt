@@ -1,0 +1,6 @@
+validation_test_with_csv(scenarios-tests Kappa-coefficient)
+#validation_test_with_csv(scenarios-tests Confusion-Matrix) # We must Fix the Issue complex title for csv writer/reader
+validation_test_without_comparison(scenarios-tests Confusion-Matrix)
+validation_test_without_comparison(scenarios-tests ROC-Curve)
+validation_test_with_xml(scenarios-tests Statistic-Generator)
+validation_test_without_comparison(scenarios-tests Classifier-Accuracy)

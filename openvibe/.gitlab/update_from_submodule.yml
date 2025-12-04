@@ -1,0 +1,108 @@
+#
+# This file list the preliminary checks done before trying to compile
+#
+---
+.update_repo: &update_repo_script
+  stage: .pre
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  variables:
+    GIT_STRATEGY: fetch
+    MAIN_BRANCH: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+   #    before: 151-deploy-sonarqube" # set to "" reset
+    TEST_BRANCH: ""
+  script:
+      # 151-deploy-sonarqube is for testing purpose only, should be qt6 !
+    - if [[ -n $CI_MERGE_REQUEST_ID ]]; then
+        BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME;
+        echo "MR on $BRANCH_NAME";
+      else
+        BRANCH_NAME=$CI_COMMIT_BRANCH;
+        echo "Commit on $BRANCH_NAME";
+      fi
+    - echo "BRANCH NAME = $BRANCH_NAME"
+    - if [[ $MAIN_BRANCH == "" ]]; then
+        MAIN_BRANCH="qt6";
+      fi
+    - if [[ $TEST_BRANCH == "" ]]; then
+        TEST_BRANCH=$MAIN_BRANCH;
+      fi
+    - echo "Main branch check against is set to - $MAIN_BRANCH -"
+    - echo "Test branch check against is set to - $TEST_BRANCH -"
+    - MODULE_NAME=`basename $CI_PROJECT_PATH`
+    - GIT_URL=`git remote get-url origin --push`
+    - GIT_URL=`echo $GIT_URL | sed -e 's/\/[a-z]*\.git/\/meta.git/'` # replace current MODULE_NAME by meta
+    - echo "target branch $CI_MERGE_REQUEST_TARGET_BRANCH_NAME source branch name $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
+    - echo "project path $CI_PROJECT_PATH" # openvibe/sdk
+    - rm -rf *; rm -rf .git*
+    - echo "git clone -b $TEST_BRANCH $GIT_URL ."
+    - git clone  $GIT_URL . # clone MAIN BRANCH only into $MODULE_NAME/.
+    - git submodule update --init --recursive; # initialize submodules
+    - git checkout remotes/origin/$TEST_BRANCH # switch to TEST_BRANCH
+    - git submodule foreach "git checkout remotes/origin/$MAIN_BRANCH"       # Using default branch for basis
+    - echo "git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" 
+    - cd $MODULE_NAME; git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME; cd ..  # on MODULE_NAME, checkout the MR
+      # in case of testing, get meta to the TEST_BRANCH
+    - echo "======================="
+    - git log --oneline -n 2;
+    - git submodule foreach "git log --oneline -n 2";
+    - echo "======================="
+
+update_repo_linux:
+  tags: ['linux']
+  <<: *update_repo_script
+
+update_repo_macosx:
+  tags: ['macos']
+  <<: *update_repo_script
+
+
+update_repo_windows:
+  stage: .pre
+  variables:
+    GIT_STRATEGY: fetch
+    MAIN_BRANCH: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+   #    before: 151-deploy-sonarqube" # set to "" reset
+    TEST_BRANCH: ""
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  tags: ['windows']
+  script:
+    - if ($CI_MERGE_REQUEST_ID) {
+        $BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME 
+      }
+      else {
+        $BRANCH_NAME=$CI_COMMIT_BRANCH
+      }
+    - if (! $MAIN_BRANCH) {
+        $MAIN_BRANCH="qt6"
+      }
+    - if (! $TEST_BRANCH) {
+        $TEST_BRANCH=$MAIN_BRANCH
+      }
+    - echo "Main branch check against is set to - $MAIN_BRANCH -"
+    - echo "Test branch check against is set to - $TEST_BRANCH -"
+    - $MODULE_NAME=$CI_PROJECT_PATH -replace '\w*\/', '';
+    - $GIT_URL=git remote get-url origin --push
+    - echo $CI_PROJECT_PATH
+    - echo $MODULE_NAME
+    - $GIT_URL=$GIT_URL -replace '\w*\.git', 'meta.git'; echo $GIT_URL # replace current MODULE_NAME by meta
+    - echo $GIT_URL
+    - echo "target branch $CI_MERGE_REQUEST_TARGET_BRANCH_NAME source branch name $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
+    - echo "project path $CI_PROJECT_PATH" # openvibe/sdk
+    - Remove-Item -Path * -Recurse -Force
+    - echo "git clone -b $TEST_BRANCH $GIT_URL ."
+    - git clone  $GIT_URL . # clone MAIN BRANCH only into $MODULE_NAME/.
+    - git submodule update --init --recursive; # initialize submodules
+    - git checkout remotes/origin/$TEST_BRANCH # switch to TEST_BRANCH
+    - git submodule foreach "git checkout remotes/origin/$MAIN_BRANCH"       # Using default branch for basis
+    - echo "git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" 
+    - cd $MODULE_NAME; git checkout $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME; cd ..  # on MODULE_NAME, checkout the MR
+      # in case of testing, get meta to the TEST_BRANCH
+    - echo "======================="
+    - git log --oneline -n 2;
+    - git submodule foreach "git log --oneline -n 2";
+    - echo "======================="
+
+    
+        

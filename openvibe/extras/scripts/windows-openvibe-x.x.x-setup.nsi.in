@@ -1,0 +1,185 @@
+	!define OV_VERSION "@PROJECT_VERSION@"
+	!define OV_VERSION_SHORT "@PROJECT_VERSION_SHORT@"
+	
+!ifndef OUTFILE
+	!define OUTFILE "openvibe-${OV_VERSION}-@ARCH_BITS@bit-setup.exe"
+!endif
+	
+	SetCompressor /FINAL /SOLID lzma
+	SetCompressorDictSize 16
+
+	!include "MUI.nsh"
+	!include "zipdll.nsh"
+  
+	;Name and file
+	!define OV_NAME "OpenViBE ${OV_VERSION} (@ARCH_BITS@bit)"
+	Name "${OV_NAME}"
+	OutFile ${OUTFILE}
+
+	;To detect a previous installation
+	!define OV_REGKEY "openvibe${OV_VERSION_SHORT}-@ARCH_BITS@bit"
+	
+	;Default installation folder
+	InstallDir "@ARCH_PROGFILES@\openvibe-${OV_VERSION}-@ARCH_BITS@bit"
+	Var OLDINSTDIR
+
+;Interface Settings
+
+	!define MUI_ABORTWARNING
+	
+;Pages
+
+	!insertmacro MUI_PAGE_WELCOME
+	!insertmacro MUI_PAGE_LICENSE "@CMAKE_SOURCE_DIR@\COPYING"
+	!insertmacro MUI_PAGE_DIRECTORY
+	!insertmacro MUI_PAGE_COMPONENTS	
+	!insertmacro MUI_PAGE_INSTFILES
+	!insertmacro MUI_PAGE_FINISH
+
+	!insertmacro MUI_UNPAGE_WELCOME
+	!insertmacro MUI_UNPAGE_CONFIRM
+	!insertmacro MUI_UNPAGE_INSTFILES
+	!insertmacro MUI_UNPAGE_FINISH
+
+
+	
+;Languages
+
+	!insertmacro MUI_LANGUAGE "English"
+
+;Installer and uninstaller icons
+
+	Icon "${NSISDIR}\Contrib\Graphics\Icons\box-install.ico"
+	UninstallIcon "${NSISDIR}\Contrib\Graphics\Icons\box-uninstall.ico"
+
+;##########################################################################################################################################################
+;##########################################################################################################################################################
+;##########################################################################################################################################################
+
+  
+Function .onInit
+
+	; Note that for logging to work, you will need a logging-enabled build of nsis. 
+	; At the time of writing this, you could get one from http://nsis.sourceforge.net/Special_Builds 
+	LogSet on
+  
+	UserInfo::GetAccountType
+	Pop $R1
+	StrCmp $R1 "Admin" has_admin_rights 0
+		MessageBox MB_OK "You must be administrator to install OpenViBE" /SD IDOK
+		Quit
+has_admin_rights:
+
+	ReadRegStr $0 HKLM SOFTWARE\${OV_REGKEY} InstallDir
+
+	${If} $0 != ""
+		IfFileExists "$0\Uninstall.exe" +1 +5
+			MessageBox MB_YESNO "A previous installation of ${OV_NAME} is installed under $0.$\nContinuing the install procedure will remove previous installation of ${OV_NAME} (including all files you eventually added in the installation directory).$\nWould you like to accept this removal and continue on installation process ?" /SD IDYES IDNO +1 IDYES +2
+			Abort
+		StrCpy $OLDINSTDIR $0
+		StrCpy $INSTDIR $0
+	${EndIf}
+
+	; Make OpenViBE section mandatory
+	IntOp $0 ${SF_SELECTED} | ${SF_RO}
+	IntOp $0 $0 | ${SF_BOLD}
+    SectionSetFlags "Section1" $0
+	
+FunctionEnd
+
+; Returns characters before -, _ or .
+Function GetFirstStrPart
+  Exch $R0
+  Push $R1
+  Push $R2
+  StrLen $R1 $R0
+  IntOp $R1 $R1 + 1
+  loop:
+    IntOp $R1 $R1 - 1
+    StrCpy $R2 $R0 1 -$R1
+    StrCmp $R2 "" exit2
+    StrCmp $R2 "-" exit1 
+    StrCmp $R2 "_" exit1
+    StrCmp $R2 "." exit1
+  Goto loop
+  exit1:
+    StrCpy $R0 $R0 -$R1
+  exit2:
+    Pop $R2
+    Pop $R1
+    Exch $R0
+FunctionEnd
+
+;##########################################################################################################################################################
+;##########################################################################################################################################################
+;##########################################################################################################################################################
+
+Section "!OpenViBE" Section1
+
+	LogSet on
+	
+	${If} $OLDINSTDIR != ""
+		RMDir /r $OLDINSTDIR
+		RMDir /r "$SMPROGRAMS\${OV_NAME}"
+	${EndIf}
+
+	SetOutPath $INSTDIR
+	WriteRegStr HKLM "SOFTWARE\${OV_REGKEY}" "InstallDir" "$INSTDIR"
+	WriteUninstaller Uninstall.exe
+		
+	SetOutPath "$INSTDIR"
+	; Export binaries
+	File /nonfatal /r @CMAKE_INSTALL_PREFIX@\bin
+	; Export launch scripts
+	File /nonfatal @CMAKE_INSTALL_PREFIX@\*.cmd
+	; File /nonfatal /r ..\dist\doc
+	; File /nonfatal /r ..\dist\include
+	
+	; etc and lib folders are needed for the gtk theme
+	File /nonfatal /r /x *.lib @CMAKE_INSTALL_PREFIX@\lib
+	File /nonfatal /r @CMAKE_INSTALL_PREFIX@\etc
+	
+	File /nonfatal /r @CMAKE_INSTALL_PREFIX@\log
+	File /nonfatal /r @CMAKE_INSTALL_PREFIX@\share
+	; File /nonfatal /r ..\dist\tmp
+
+	StrCmp $DIRECTX_MISSING "false" no_need_to_patch_3d_functionnality
+	FileOpen $0 "$INSTDIR\share\openvibe\kernel\openvibe.conf" a	
+	FileSeek $0 0 END
+	FileWrite $0 "$\r$\n"
+	FileWrite $0 "#####################################################################################$\r$\n"
+	FileWrite $0 "# Patched by installer because DirectX is missing$\r$\n"
+	FileWrite $0 "#####################################################################################$\r$\n"
+	FileWrite $0 "Kernel_3DVisualizationEnabled = false$\r$\n"
+	FileClose $0
+no_need_to_patch_3d_functionnality:
+
+	CreateDirectory "$SMPROGRAMS\${OV_NAME}"
+	CreateDirectory "$SMPROGRAMS\${OV_NAME}\Developer tools"
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\Developer tools\OpenViBE ID Generator.lnk"       "$INSTDIR\bin\openvibe-id-generator"        "" "%SystemRoot%\system32\shell32.dll" 57
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\Developer tools\OpenViBE Plugin Inspector.lnk"   "$INSTDIR\bin\openvibe-plugin-inspector"    "" "%SystemRoot%\system32\shell32.dll" 57
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\Developer tools\OpenViBE Skeleton Generator.lnk" "$INSTDIR\bin\openvibe-skeleton-generator"  "" "%SystemRoot%\system32\shell32.dll" 57
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\OpenViBE Designer @ARCH_BITS@bit.lnk"                           "$INSTDIR\bin\openvibe-designer"            "" "%SystemRoot%\system32\shell32.dll" 137
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\OpenViBE Acquisition Server @ARCH_BITS@bit.lnk"                 "$INSTDIR\bin\openvibe-acquisition-server"  "" "%SystemRoot%\system32\shell32.dll" 18
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\OpenViBE Tracker @ARCH_BITS@bit.lnk"                            "$INSTDIR\bin\openvibe-tracker"  "" "%SystemRoot%\system32\shell32.dll" 249
+	CreateShortCut "$SMPROGRAMS\${OV_NAME}\Uninstall.lnk"                                   "$INSTDIR\Uninstall.exe"
+
+	
+	; AccessControl::EnableFileInheritance "$INSTDIR"
+	; AccessControl::GrantOnFile "$INSTDIR" "(BU)" "GenericRead + GenericWrite + GenericExecute + Delete" ; to ensure windows XP back compatibility
+	; AccessControl::GrantOnFile "$INSTDIR" "(S-1-5-32-545)" "GenericRead + GenericWrite + GenericExecute + Delete" ; (BU) user group (builtin users) does not exist on win7. this SID replaces it.
+SectionEnd
+
+Section "Uninstall"
+
+	RMDir /r $INSTDIR
+	RMDir /r "$SMPROGRAMS\${OV_NAME}"
+
+SectionEnd
+
+LangString DESC_Section1 ${LANG_ENGLISH} "The OpenViBE package: Designer, Acquisition Server, drivers, examples, etc."
+
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+  !insertmacro MUI_DESCRIPTION_TEXT ${Section1} $(DESC_Section1)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+

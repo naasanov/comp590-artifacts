@@ -1,0 +1,2 @@
+# Lag of LSL can't allow comparison between output and ref
+validation_test_without_comparison(scenarios-tests LSL-Communication)
