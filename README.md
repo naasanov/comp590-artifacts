@@ -1,6 +1,6 @@
 ## Environment Setup
 _Note: Much of this is repeated from the [OpenViBE setup instructions](https://gitlab.inria.fr/openvibe/meta). Refer to those further if complications arise, especially for Windows_
-1. install miniconda: https://docs.conda.io/projects/miniconda/en/latest/
+1. Install miniconda: https://docs.conda.io/projects/miniconda/en/latest/
 2. Clone this repository `git clone https://github.com/naasanov/comp590-artifacts.git`
 3. Install openvibe dependencies: `conda env update -f conda/env_{linux|osx|windows}.yaml`
 4. Activate the environment: `conda activate openvibe`
