@@ -1,0 +1,30 @@
+OpenViBE Test Data Usage Guide
+======================================================================
+
+Files in this directory:
+
+1. test_batch_*.csv
+   - Feature vectors in CSV format
+   - Can be loaded with CSV File Reader box in OpenViBE
+   - Different batch sizes for throughput testing
+
+2. all_features.npy
+   - All features in numpy format (for Python scripts)
+
+3. reference_predictions.json
+   - Expected class predictions from ONNX model
+   - Use to verify OpenViBE outputs match
+
+4. reference_stimulations.json
+   - Expected stimulation IDs from classifier
+   - Compare with actual OpenViBE stimulation output
+
+Usage in OpenViBE:
+----------------------------------------------------------------------
+1. CSV File Reader → Set to test_batch_X.csv
+2. ONNX Classifier → Point to ../models/lda_classifier.onnx
+3. Compare output stimulations with reference_stimulations.json
+
+Expected stimulation IDs:
+  Class 0 → 0x00008101 (OVTK_StimulationId_Label_01)
+  Class 1 → 0x00008102 (OVTK_StimulationId_Label_02)

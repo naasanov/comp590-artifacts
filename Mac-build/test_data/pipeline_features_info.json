@@ -1,0 +1,26 @@
+{
+  "n_samples": 144,
+  "n_features": 100,
+  "n_channels": 25,
+  "n_freq_bands_per_channel": 4,
+  "frequency_bands": [
+    {
+      "name": "alpha",
+      "range": "8-12 Hz"
+    },
+    {
+      "name": "low_beta",
+      "range": "12-16 Hz"
+    },
+    {
+      "name": "high_beta",
+      "range": "16-24 Hz"
+    },
+    {
+      "name": "low_gamma",
+      "range": "24-30 Hz"
+    }
+  ],
+  "class_0": "left_hand",
+  "class_1": "right_hand"
+}
